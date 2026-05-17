@@ -1,0 +1,14 @@
+.credentials.json
+.env
+*.env
+*.log
+logs/
+output/*.log
+sessions/
+projects/
+backups/
+ide/
+node_modules/
+dist/
+build/\.cache/
+coverage/

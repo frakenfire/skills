@@ -1,0 +1,8 @@
+# Codex user config template
+# Copy to ~/.codex/config.toml if needed.
+
+[features]
+# codex_hooks = true
+
+# Use hooks only for verification, lint, secret scan, or file-size warnings.
+# Do not use hooks for auto-clear, auto-commit, auto-push, deploy, delete, or permission changes.
