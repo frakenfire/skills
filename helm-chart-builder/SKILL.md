@@ -1,12 +1,6 @@
 ---
-name: "helm-chart-builder"
-description: "Helm chart development agent skill and plugin for Codex, Codex, Gemini CLI, Cursor, OpenClaw — chart scaffolding, values design, template patterns, dependency management, security hardening, and chart testing. Use when: user wants to create or improve Helm charts, design values.yaml files, implement template helpers, audit chart security (RBAC, network policies, pod security), manage subcharts, or run helm lint/test."
-license: MIT
-metadata:
-  version: 1.0.0
-  author: Alireza Rezvani
-  category: engineering
-  updated: 2026-03-15
+name: helm-chart-builder
+description: Helm chart scaffolding, values design, template patterns, dependency management, security hardening, and chart testing. Use when creating or improving Helm charts, designing values.yaml, implementing template helpers, auditing chart security, or running helm lint/test.
 ---
 
 # Helm Chart Builder

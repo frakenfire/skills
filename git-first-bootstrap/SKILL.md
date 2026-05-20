@@ -1,6 +1,6 @@
 ---
 name: git-first-bootstrap
-description: Use for GitHub-first setup, cross-machine restore, Codex/Codex bootstrap, context/token cleanup, /done workflows, and enforcing repo-only coding with commit/push discipline.
+description: GitHub-first setup, cross-machine restore, and repo-only coding discipline. Use for new machine setup, restoring from a private GitHub repo, context cleanup, /done workflows, or enforcing commit/push discipline.
 ---
 
 # Git-first Bootstrap

@@ -1,6 +1,6 @@
 ---
 name: gas-deploy
-description: Google Apps Script and clasp 운영 배포 스킬. Use when Codex works on Apps Script projects, clasp push/deploy/run, installable triggers, time-driven automations, Google Chat/Gmail/Sheets automation, or needs to verify/safely repair triggers without making the user manually click Apps Script UI.
+description: Google Apps Script and clasp production deployment. Use when working on Apps Script projects — clasp push/deploy/run, installable triggers, time-driven automations, Google Chat/Gmail/Sheets automation, or verifying and repairing triggers without manual UI interaction.
 ---
 
 # Google Apps Script / clasp 운영 배포

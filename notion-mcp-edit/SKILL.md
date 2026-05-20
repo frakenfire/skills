@@ -1,3 +1,7 @@
+---
+name: notion-mcp-edit
+description: Notion 페이지 블록 수정 — update_content 방식으로 old_str/new_str 패치, HTML 잔재 제거, 테이블·컴럼·토글 구조 편집. "노션 수정", "노션 페이지 작성", "노션 블록 제거", "노션 update_content", "노션 깨진 테이블" 표현에 사용.
+---
 # notion-mcp-edit 스킬
 # 출처: https://developers.notion.com/guides/data-apis/enhanced-markdown
 # 최종 업데이트: 2026-05-17
@@ -7,20 +11,6 @@
 "노션 update_content", "노션 HTML 잔재", "노션 깨진 테이블", "노션 콘텐츠 바꿔줘",
 "스타팅 페이지", "온보딩 페이지 수정"
 
----
-
-## 절대 규칙
-
-```
-1. old_str은 notion-fetch 결과에서 그대로 복사 — 수동 타이핑 절대 금지
-2. command: "update_content" → properties: {} 빈 객체 고정
-3. 작업 후 반드시 notion-fetch로 재확인 — 확인 전 완료 선언 금지
-4. <br>, <empty-block/> 태그 절대 제거 금지 (마스터 수동 삽입 요소)
-5. 범위 밖 블록 건드리지 말 것
-6. 변경 전 채팅 보고 → 마스터 승인 → 실행 순서 엄수
-```
-
----
 
 ## 작업 표준 순서
 
@@ -33,7 +23,6 @@ Step 5. notion-fetch 재확인          ← 반영 여부 검증
 Step 6. 잔재 없으면 완료 보고        ← 있으면 재시도
 ```
 
----
 
 ## 도구 사용법
 
@@ -59,7 +48,6 @@ content_updates: [
 allow_deleting_content: true 필요 → 반드시 마스터 승인 먼저.
 ```
 
----
 
 ## 패턴 카탈로그
 
@@ -113,7 +101,6 @@ content_updates: [{
 }]
 ```
 
----
 
 ## Enhanced Markdown 문법 (공식 스펙)
 
@@ -228,7 +215,6 @@ content_updates: [{
 $inline math$
 ```
 
----
 
 ## 실패 처리
 
@@ -241,7 +227,6 @@ $inline math$
 4. 2회 연속 실패 → fetch 결과 그대로 마스터에게 보고 후 지시 대기
 ```
 
----
 
 ## 자주 발생하는 실패 원인
 
@@ -255,7 +240,6 @@ $inline math$
 | 동일 page_id 병렬 요청 | 같은 페이지는 순차 처리 |
 | 탭 대신 스페이스 | Enhanced Markdown은 탭 필수 |
 
----
 
 ## 토큰 절약 원칙
 
@@ -267,7 +251,6 @@ $inline math$
 5. replace_content는 최후 수단 — update_content 우선
 ```
 
----
 
 ## LWC 온보딩 페이지 특이사항
 
@@ -286,7 +269,6 @@ $inline math$
 표현 금지: "것" 명사형("리더가 해줄 것" → "리더가 해줄 일"), "수습" → "첫 3개월"
 ```
 
----
 
 ## 검증 완료 기준
 

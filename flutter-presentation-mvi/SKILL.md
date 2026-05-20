@@ -1,7 +1,6 @@
 ---
 name: flutter-presentation-mvi
-description: |
-  Flutter 프로젝트의 Presentation 레이어 패턴 — `ChangeNotifier` 기반 ViewModel, freezed `State`와 sealed `Action`, Root/Screen 위젯 분리, `ListenableBuilder`로 관찰, 1회성 이벤트는 `StreamController`로 전달. "ViewModel 만들기", "State/Action", "MVI", "ChangeNotifier", "Root와 Screen 분리", "onAction", "notifyListeners", "ListenableBuilder" 같은 표현에 트리거합니다.
+description: Flutter MVI Presentation 레이어 — ChangeNotifier ViewModel, freezed State·sealed Action, Root/Screen 분리, ListenableBuilder, StreamController 이벤트. "ViewModel 만들기", "MVI", "ChangeNotifier", "notifyListeners", "ListenableBuilder" 표현에 사용.
 ---
 
 # Flutter Presentation 레이어 (MVI 스타일)
@@ -22,7 +21,6 @@ description: |
 
 선택 요소: **Event (1회성 부작용)** — 스낵바/내비게이션 등 상태에 넣으면 안 되는 일회성 신호. `StreamController` 로 내보낸다.
 
----
 
 ## State
 
@@ -56,7 +54,6 @@ class IngredientState with _$IngredientState {
 - 모든 UI 상태는 State 에만 있다. ViewModel 인스턴스 필드로 UI 관련 변수를 흩뿌리지 않는다.
 - State 업데이트는 항상 `copyWith(...)` 로 새 인스턴스를 만들고 `_state` 에 재할당한 뒤 `notifyListeners()`.
 
----
 
 ## Action
 
@@ -78,7 +75,6 @@ sealed class IngredientAction with _$IngredientAction {
 
 **명명**: `on<Trigger>` 또는 동사형(`load...`). 각 factory는 클래스 타입(`OnTapFavorite`)도 같이 정의해 `switch` 패턴 매칭에서 쓴다.
 
----
 
 ## ViewModel
 
@@ -128,7 +124,6 @@ class IngredientViewModel with ChangeNotifier {
 - 생성자 주입으로만 의존성을 받는다. `getIt` 을 ViewModel 내부에서 호출하지 않는다.
 - `StreamSubscription` 이 있으면 `@override void dispose()` 에서 반드시 `cancel()` 한다.
 
----
 
 ## 스트림 구독 패턴
 
@@ -154,7 +149,6 @@ class SavedRecipesViewModel with ChangeNotifier {
 }
 ```
 
----
 
 ## 일회성 이벤트 (스낵바, 내비게이션)
 
@@ -172,7 +166,6 @@ class HomeViewModel with ChangeNotifier {
 
 Root 위젯에서는 `StreamBuilder` 대신 `initState` 의 `listen` 으로 구독해 Snackbar 를 띄운다 (Widget 트리 밖의 부작용이므로).
 
----
 
 ## Root / Screen 분리
 
@@ -238,7 +231,6 @@ class IngredientScreen extends StatelessWidget {
 - `ViewModel` 에 대한 참조가 없다. 테스트와 위젯 프리뷰가 독립적으로 가능하다.
 - 네비게이션이나 다이얼로그가 필요한 인터랙션은 `onTapMenu` 같은 추가 콜백으로 분리해 Root 가 처리하게 한다 — Screen 이 `context.go` 같은 go_router 호출을 직접 하지 않는다.
 
----
 
 ## Action이 아닌 콜백을 쓸 때
 
@@ -259,13 +251,11 @@ onAction: (action) {
 },
 ```
 
----
 
 ## UI 모델 (필요할 때)
 
 도메인 모델에 표시 포맷(`"3일 전"`, `"20 min"`)이 얽혀 있으면 Presentation 전용 UI 모델을 만든다. 기본적으로는 도메인 모델을 그대로 쓰고, **포매팅이 복잡해질 때만** UI 모델로 분리한다.
 
----
 
 ## 체크리스트 — 새 화면 추가
 
@@ -275,7 +265,6 @@ onAction: (action) {
 - [ ] 필요하면 `StreamController` 로 1회성 이벤트 노출
 - [ ] `build_runner build` 로 freezed 파일 생성
 
----
 
 ## 안티 패턴
 

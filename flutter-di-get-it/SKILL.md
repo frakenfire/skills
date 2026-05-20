@@ -1,7 +1,6 @@
 ---
 name: flutter-di-get-it
-description: |
-  Flutter 프로젝트에서 get_it 기반 의존성 주입 설정 방법. `diSetup()` 함수 작성, DataSource/Repository/UseCase/ViewModel 등록 순서, 싱글톤 vs 팩토리 선택, Root 위젯에서 `getIt<T>()` 호출 패턴을 다룹니다. "DI 설정", "get_it", "registerSingleton", "registerFactory", "의존성 주입", "ViewModel 등록", "diSetup", "getIt 인스턴스" 같은 표현이 나오면 반드시 이 스킬을 사용하세요.
+description: Flutter get_it 기반 의존성 주입 — diSetup() 함수, DataSource/Repository/UseCase/ViewModel 등록 순서, 싱글턴 vs 팩토리, getIt<T>() 호출 패턴. "DI 설정", "get_it", "registerSingleton", "registerFactory", "의존성 주입", "ViewModel 등록" 표현에 사용.
 ---
 
 # Flutter DI — get_it
@@ -13,7 +12,6 @@ description: |
 - Root 위젯에서만 `getIt<T>()` 로 ViewModel을 꺼낸다. Screen 위젯이나 공용 위젯에는 절대 `getIt` 을 쓰지 않는다 (테스트 용이성 확보).
 - ViewModel은 **항상 `registerFactory`** 로 등록한다. 싱글톤이면 여러 화면이 같은 상태를 공유하게 되어 버린다.
 
----
 
 ## 기본 진입점
 
@@ -39,7 +37,6 @@ void main() {
 
 등록 순서는 **의존성 그래프의 리프부터** 위로 올린다. DataSource → Repository → UseCase → ViewModel 순서여야 `getIt()` 이 참조할 때 이미 등록되어 있다.
 
----
 
 ## 레이어별 등록 패턴
 
@@ -93,7 +90,6 @@ getIt.registerFactory<IngredientViewModel>(
 );
 ```
 
----
 
 ## Root 위젯에서 주입하기
 
@@ -117,7 +113,6 @@ class SavedRecipesRoot extends StatelessWidget {
 
 **원칙**: `getIt<>()` 호출은 `*Root` 위젯의 `build()` 안에서만 일어난다. Screen 위젯은 `state` 와 `onAction` 만 받도록 유지해 프리뷰/테스트가 가능하게 한다.
 
----
 
 ## 싱글톤 vs 팩토리
 
@@ -129,7 +124,6 @@ class SavedRecipesRoot extends StatelessWidget {
 
 이 프로젝트의 실제 예(`lib/core/di/di_setup.dart`)에서는 Repository/DataSource/UseCase는 `registerSingleton`, ViewModel은 `registerFactory` 로 일관되게 분리되어 있다. 이 규칙을 따르라.
 
----
 
 ## 팩토리 메서드가 필요한 경우
 
@@ -141,7 +135,6 @@ getIt.registerSingleton<HttpClient>(HttpClientFactory.create(getIt()));
 
 Named 파라미터가 필요한 경우도 동일하게 람다 폼을 사용한다.
 
----
 
 ## 체크리스트 — 새 feature 추가 시 DI 등록
 
@@ -152,7 +145,6 @@ Named 파라미터가 필요한 경우도 동일하게 람다 폼을 사용한�
 - [ ] ViewModel은 **항상 `registerFactory`**
 - [ ] Root 위젯에서만 `getIt<ViewModelType>()` 로 꺼냄
 
----
 
 ## 안티 패턴
 

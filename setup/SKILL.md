@@ -1,6 +1,6 @@
 ---
 name: setup
-description: 오케스트레이터 하네스 부트스트랩. 권한→환경→프로젝트선택→컨텍스트→GitHub워크플로→태스크큐→에이전트로스터 순서로 완전 자동 실행. Codex / Codex / Cursor 공통 사용 가능.
+description: 오케스트레이터 하네스 부트스트랩 — 권한→환경→프로젝트선택→콘텍스트→GitHub워크플로→태스크큐→에이전트로스터 순서로 완전 자동 실행. Use when starting a new session, bootstrapping a project, or running /setup.
 ---
 
 # /setup — Orchestrator Harness Bootstrap
@@ -8,7 +8,6 @@ description: 오케스트레이터 하네스 부트스트랩. 권한→환경→
 **지원 도구:** Codex · OpenAI Codex · Cursor · Windsurf · GitHub Copilot  
 **실행 방식:** 오케스트레이터가 지휘, 8단계 순차 자동 실행, 각 단계 결과 인라인 보고
 
----
 
 ## Phase 0: 하네스 자기선언
 
@@ -27,7 +26,6 @@ Role: 오케스트레이터 — 전체 흐름 지휘, 직접 코드 작성 안 �
 - `.cursor/` 폴더 존재 → Cursor
 - 없으면 → Unknown (AGENTS.md 기준으로 동작)
 
----
 
 ## Phase 1: 권한 자동화
 
@@ -46,7 +44,6 @@ Role: 오케스트레이터 — 전체 흐름 지휘, 직접 코드 작성 안 �
 
 보고: `✓ Permissions — 모든 승인 프롬프트 비활성화`
 
----
 
 ## Phase 2: 환경 진단
 
@@ -62,7 +59,6 @@ Role: 오케스트레이터 — 전체 흐름 지휘, 직접 코드 작성 안 �
 
 보고: `✓ Environment — node X.X / npm X.X / git X.X / gh X.X`
 
----
 
 ## Phase 3: 프로젝트 선택
 
@@ -86,7 +82,6 @@ Role: 오케스트레이터 — 전체 흐름 지휘, 직접 코드 작성 안 �
 
 보고: `✓ Project — 클릭핏 AI 이력서 선택됨`
 
----
 
 ## Phase 4: Git & GitHub 동기화
 
@@ -104,7 +99,6 @@ git status
 
 보고: `✓ Git — branch: master, origin/master와 동기화됨`
 
----
 
 ## Phase 5: 의존성 설치
 
@@ -117,7 +111,6 @@ git status
 
 보고: `✓ Dependencies — npm install 완료`
 
----
 
 ## Phase 6: 컨텍스트 로드
 
@@ -138,7 +131,6 @@ git status
 
 보고: `✓ Context — AGENTS.md + design-system.md + session-state 로드됨`
 
----
 
 ## Phase 7: GitHub 워크플로 초기화
 
@@ -169,7 +161,6 @@ git status
 
 보고: `✓ GitHub Workflow — feat/xxx 브랜치 생성됨`
 
----
 
 ## Phase 8: 에이전트 로스터 & 준비 완료
 
@@ -201,7 +192,6 @@ git status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
----
 
 ## 세션 종료 규칙 (/done 또는 컨텍스트 한계 도달 시)
 
@@ -212,7 +202,6 @@ git status
 5. 미완료 태스크 요약 출력
 6. `/clear` 제안 (직접 실행 안 함)
 
----
 
 ## 멀티툴 호환성
 
@@ -224,7 +213,6 @@ git status
 | Windsurf | `.windsurf/rules` | 수동 참조 |
 | GitHub Copilot | `.github/copilot-instructions.md` | 수동 미러링 |
 
----
 
 ## 철칙 (Iron Rules)
 
@@ -234,7 +222,6 @@ git status
 4. **force push 절대 금지** — 히스토리 보존 필수.
 5. **세션 종료 = 커밋** — push 없이 세션 끝내지 않는다.
 
----
 
 ## 금지사항
 

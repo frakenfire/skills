@@ -1,12 +1,6 @@
 ---
-name: "research-summarizer"
-description: "Structured research summarization agent skill for non-dev users. Handles academic papers, web articles, reports, and documentation. Extracts key findings, generates comparative analyses, and produces properly formatted citations. Use when: user wants to summarize a research paper, compare multiple sources, extract citations from documents, or create structured research briefs. Plugin for Codex, Codex, Gemini CLI, and OpenClaw."
-license: MIT
-metadata:
-  version: 1.0.0
-  author: Alireza Rezvani
-  category: product
-  updated: 2026-03-16
+name: research-summarizer
+description: Structured research summarization — extract key findings, generate comparative analyses, produce citations from academic papers, web articles, reports, or documentation. Use when summarizing a paper, comparing multiple sources, extracting citations, or creating structured research briefs.
 ---
 
 # Research Summarizer

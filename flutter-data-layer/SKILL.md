@@ -1,7 +1,6 @@
 ---
 name: flutter-data-layer
-description: |
-  Flutter 프로젝트의 Data 레이어 패턴 — DataSource 인터페이스·구현, Repository, DTO와 도메인 모델 매핑, freezed 모델의 `fromJson`, 그리고 `rxdart`의 `BehaviorSubject`로 만드는 반응형 저장소. "DataSource 만들기", "Repository 구현", "리포지토리", "로컬/원격 데이터 소스", "BehaviorSubject", "스트림 저장소", "DTO 매핑", "fromJson" 같은 표현에 트리거합니다.
+description: Flutter Data 레이어 패턴 — DataSource 인터페이스·구현, Repository, DTO 매핑, freezed fromJson, BehaviorSubject 반응형 저장소. "DataSource 만들기", "Repository 구현", "리포지터리", "BehaviorSubject", "DTO 매핑", "fromJson" 표현에 사용.
 ---
 
 # Flutter Data 레이어
@@ -10,7 +9,6 @@ description: |
 
 Data 레이어가 반환하는 타입은 **flutter-error-handling** 스킬에서 정의한 `Result<D, E extends Error>` 를 기반으로 한다. 플랫폼 예외는 Data 레이어에서 catch 해 typed error 로 변환한다. 자세한 규칙은 해당 스킬을 참고.
 
----
 
 ## DataSource vs Repository
 
@@ -34,7 +32,6 @@ abstract interface class RecipeRepository {
 
 Repository 인터페이스는 **도메인 타입(`Recipe`)** 을 주고받지만, DataSource 인터페이스는 **원시 타입/DTO(`Map`)** 를 주고받는다는 점이 핵심이다. 매핑은 Repository 구현체가 담당한다.
 
----
 
 ## 도메인 계약 (lib/domain)
 
@@ -50,7 +47,6 @@ abstract interface class RecipeRepository {
 }
 ```
 
----
 
 ## 도메인 모델 (freezed)
 
@@ -87,7 +83,6 @@ class Recipe with _$Recipe {
 dart run build_runner build --delete-conflicting-outputs
 ```
 
----
 
 ## DataSource 구현
 
@@ -120,7 +115,6 @@ class DefaultLocalStorage implements LocalStorage {
 
 Android 가이드라인과 다르게 이 프로젝트는 구현체에 `Impl` 접미어를 일관되게 사용하므로, 기존 컨벤션을 따른다.
 
----
 
 ## Repository 구현
 
@@ -154,7 +148,6 @@ class MockRecipeRepositoryImpl implements RecipeRepository {
 - `Repository` 인터페이스는 `domain` 에 있고, 구현은 `data` 에 있어 의존성 방향이 유지된다.
 - 매핑은 `Recipe.fromJson` 같은 freezed 생성 팩토리를 이용한다. 별도 mapper 파일이 필요 없을 때가 많다.
 
----
 
 ## 반응형 저장소 — BehaviorSubject 패턴
 
@@ -207,7 +200,6 @@ Stream<List<Recipe>> execute() async* {
 
 이 패턴이 깔끔하다: Repository는 원자적 데이터(전체 목록, id 집합)만 책임지고, 유즈케이스가 그걸 화면 목적에 맞게 합성한다.
 
----
 
 ## UseCase — Data와 Presentation 사이
 
@@ -236,7 +228,6 @@ class GetSavedRecipesUseCase {
 
 ViewModel 은 Repository 를 직접 호출해도 되지만, **여러 소스를 섞거나 도메인 규칙이 끼어드는 순간** UseCase 로 분리한다.
 
----
 
 ## 체크리스트 — 새 DataSource / Repository 추가
 
@@ -248,7 +239,6 @@ ViewModel 은 Repository 를 직접 호출해도 되지만, **여러 소스를 �
 - [ ] `diSetup()` 에 인터페이스 타입으로 등록
 - [ ] `dart run build_runner build --delete-conflicting-outputs`
 
----
 
 ## 안티 패턴
 

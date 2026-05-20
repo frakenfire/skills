@@ -1,7 +1,6 @@
 ---
 name: flutter-error-handling
-description: |
-  Flutter 프로젝트의 타입 안전 에러 처리 패턴 — `Error` 마커 인터페이스, freezed 기반 `Result<D, E>` sealed 클래스, 기능별 에러 enum, `switch` 패턴 매칭으로 성공/실패를 처리하는 방법. "Result 래퍼", "에러 처리", "ResultSuccess", "ResultError", "NetworkError", "타입 안전 에러", "freezed sealed", "exception 대신 Result" 같은 표현에 트리거합니다.
+description: Flutter 타입 안전 에러 처리 — Error 마커 인터페이스, freezed Result<D,E> sealed 클래스, 기능별 에러 enum, switch 패턴 매칭. "Result 래퍼", "에러 처리", "ResultSuccess", "ResultError", "freezed sealed", "exception 대신 Result" 표현에 사용.
 ---
 
 # Flutter 에러 처리 — Result<D, E>
@@ -12,7 +11,6 @@ description: |
 
 예외는 **프레임워크/플랫폼이 던진 것**을 가장 낮은 레이어(Data)에서 잡아 `Result.error(...)` 로 변환하는 용도로만 쓴다. UseCase, ViewModel, Screen 은 더 이상 try/catch 를 보지 않는다.
 
----
 
 ## 기반 타입 (`lib/core/domain/error/`)
 
@@ -43,7 +41,6 @@ sealed class Result<D, E extends Error> with _$Result<D, E> {
 
 **중요**: `sealed` 로 선언했기 때문에 `switch` 에서 모든 케이스를 Dart 컴파일러가 강제한다. 케이스를 빠뜨리면 컴파일 경고가 뜬다.
 
----
 
 ## 기능별 에러 정의
 
@@ -71,7 +68,6 @@ enum NetworkError implements Error {
 
 **다중 에러는 표현하지 않는다.** 한 `Result` 는 정확히 한 가지 에러만 담는다. 여러 조건을 동시에 알려줘야 한다면 그것은 도메인 설계 문제다.
 
----
 
 ## UseCase / Repository 반환 타입
 
@@ -85,7 +81,6 @@ Future<Result<List<Recipe>, BookmarkError>> execute(int recipeId);
 - Data 레이어에서 네트워크/DB 예외를 catch 해 `NetworkError.unknown` 같은 값으로 변환한다.
 - UseCase는 여러 Repository 에러를 자기 feature 에러로 **매핑**해서 반환한다 (예: 북마크 저장 실패 시 `BookmarkError.saveFailed`).
 
----
 
 ## ViewModel에서 소비하기
 
@@ -119,7 +114,6 @@ void _fetchCategories() async {
 - `ResultSuccess<D, E>()` / `ResultError<D, E>()` 를 적어야 제네릭이 유지되고 `result.data` / `result.error` 의 구체 타입이 살아 있다.
 - 안쪽 `switch (result.error)` 는 모든 enum 케이스를 강제로 나열하게 만들어, 새 에러가 추가될 때 누락된 처리 지점을 컴파일러가 알려준다.
 
----
 
 ## 에러를 UI로 전달하는 방식
 
@@ -138,7 +132,6 @@ Root 위젯이 `eventStream` 을 listen 해서 `ScaffoldMessenger.showSnackBar` 
 
 에러 화면 자체를 그려야 한다면 `State` 에 `NetworkError? error` 필드를 두고 `copyWith(error: ...)` 로 반영한다. 사용자가 닫거나 재시도하면 `error: null` 로 초기화한다.
 
----
 
 ## Data 레이어 — 예외를 Result로 바꾸는 지점
 
@@ -161,7 +154,6 @@ Future<Result<List<RecipeDto>, NetworkError>> getRecipes() async {
 - 예외가 **발생하는 레이어가 곧 잡는 레이어**다. 플랫폼/HTTP 예외는 Data에서, 도메인 검증 실패는 Domain에서 `Result.error` 로 변환한다.
 - Presentation 에는 예외가 절대 올라오지 않게 한다. ViewModel 의 `try/catch` 가 보이면 경고 신호다.
 
----
 
 ## 어떤 에러 타입을 쓸지 결정표
 
@@ -172,7 +164,6 @@ Future<Result<List<RecipeDto>, NetworkError>> getRecipes() async {
 | 기능 전용 실패 (북마크 저장 실패 등) | `BookmarkError` 같은 enum | `lib/domain/error/` |
 | 여러 DataSource 를 묶는 Repository | 상위 에러 타입 (`NetworkError` 또는 feature error) | 해당 feature |
 
----
 
 ## 체크리스트
 
@@ -183,7 +174,6 @@ Future<Result<List<RecipeDto>, NetworkError>> getRecipes() async {
 - [ ] Data 레이어가 플랫폼 예외를 catch 해 `Result.error` 로 변환한다
 - [ ] Presentation 어디에도 `try/catch` 가 떠돌지 않는다
 
----
 
 ## 안티 패턴
 

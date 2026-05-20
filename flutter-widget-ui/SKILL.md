@@ -1,7 +1,6 @@
 ---
 name: flutter-widget-ui
-description: |
-  Flutter 위젯 UI 작성 패턴 — StatelessWidget 선호, `const` 최적화, `ListenableBuilder`로 ViewModel 관찰, `ListView.builder`/`IndexedStack`, 공용 컴포넌트 재사용, 접근성(Semantics), 다이얼로그·스낵바 처리. "위젯 만들기", "UI 만들기", "StatelessWidget", "ListView", "ListenableBuilder", "Scaffold", "스낵바", "다이얼로그", "디자인 토큰", "공용 컴포넌트" 같은 표현에 트리거합니다.
+description: Flutter 위젯 UI 패턴 — StatelessWidget, const 최적화, ListenableBuilder, ListView.builder, 공용 컴포넌트, Semantics, 다이얼로그·스낙바. "위젯 만들기", "UI 만들기", "StatelessWidget", "ListView", "Scaffold", "스낙바" 표현에 사용.
 ---
 
 # Flutter 위젯 UI 패턴
@@ -10,7 +9,6 @@ description: |
 
 UI는 바보다. Screen 위젯은 `state` 와 `onAction` 을 받아 렌더링과 사용자 인터랙션만 담당한다. 비즈니스 로직, 데이터 변환, 네트워크 호출은 전부 ViewModel/UseCase/Data 레이어에서 끝난다. Screen 안에는 로직이 없어야 테스트와 디자인 리뷰가 쉬워진다.
 
----
 
 ## StatelessWidget을 기본으로
 
@@ -21,7 +19,6 @@ UI는 바보다. Screen 위젯은 `state` 와 `onAction` 을 받아 렌더링과
 
 앱 전반 상태는 전부 ViewModel 로 옮긴다.
 
----
 
 ## `const` 를 최대한 활용하라
 
@@ -35,7 +32,6 @@ const Icon(Icons.share, size: 20),
 
 하위 위젯이 `const` 생성자를 갖도록 작성해 재사용 경로를 열어준다.
 
----
 
 ## ViewModel 구독 — ListenableBuilder
 
@@ -54,7 +50,6 @@ return ListenableBuilder(
 
 Screen 은 `ListenableBuilder` 를 몰라야 한다. 그 책임은 Root.
 
----
 
 ## 리스트 — ListView.builder
 
@@ -84,7 +79,6 @@ IndexedStack(
 )
 ```
 
----
 
 ## 공용 컴포넌트 재사용
 
@@ -104,7 +98,6 @@ IndexedStack(
 Text('1 serve', style: TextStyles.smallerTextRegular.copyWith(color: ColorStyles.gray3)),
 ```
 
----
 
 ## 다이얼로그와 스낵바
 
@@ -139,14 +132,12 @@ IngredientScreen(
 
 **요령**: 다이얼로그 닫기와 상태 반영을 같이 해야 한다면 콜백 안에서 `viewModel.onAction(...)` → `Navigator.pop(context)` → 후속 UI 표시 순서로.
 
----
 
 ## Scaffold 구성 관례
 
 - `Scaffold` → `AppBar` → `SafeArea` → `Padding(horizontal: 30)` → `Column` 이 이 프로젝트의 기본 골격 (`ingredient_screen.dart` 참고). 수평 패딩을 `SafeArea` 안쪽에 두어 노치 회피와 일관 여백을 동시에 얻는다.
 - `AppBar` 의 `actions` 는 `PopupMenuButton` 으로 메뉴를 꽂고, 각 `PopupMenuItem` 은 `onTap` 에서 Screen이 받은 콜백(`onTapMenu`)을 호출한다.
 
----
 
 ## 텍스트 필드
 
@@ -158,7 +149,6 @@ TextField(
 )
 ```
 
----
 
 ## 접근성
 
@@ -166,7 +156,6 @@ TextField(
 - 텍스트 크기 변경에 대비해 고정 `height` 대신 `Padding` + `mainAxisSize` / `Expanded` 로 레이아웃을 구성한다.
 - 터치 타깃은 최소 48×48 논리 픽셀. 작은 아이콘 버튼은 `IconButton` 이나 `InkWell` + 충분한 padding 으로 감싼다.
 
----
 
 ## 성능 요령
 
@@ -175,7 +164,6 @@ TextField(
 - 애니메이션은 `AnimatedBuilder` / `TweenAnimationBuilder` / `ImplicitlyAnimatedWidget` 으로 리빌드 범위를 좁힌다. 프레임마다 부모 Scaffold 를 재빌드하지 않도록 애니메이션 영역을 작은 위젯으로 분리.
 - 큰 이미지는 `cacheWidth`/`cacheHeight` 로 디코딩 크기를 제한한다.
 
----
 
 ## 체크리스트 — 새 Screen 위젯
 
@@ -187,7 +175,6 @@ TextField(
 - [ ] 색/폰트는 `ColorStyles`, `TextStyles` 사용
 - [ ] `BuildContext` 가 필요한 효과(다이얼로그·스낵바·내비게이션)는 Root 에서 처리
 
----
 
 ## 안티 패턴
 

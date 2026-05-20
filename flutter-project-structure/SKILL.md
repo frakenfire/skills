@@ -1,7 +1,6 @@
 ---
 name: flutter-project-structure
-description: |
-  Flutter 단일 패키지 프로젝트의 레이어 구조, 디렉터리 규칙, 의존성 방향을 정리한 스킬. 새 기능을 어디에 둘지, 새 화면·리포지토리·유즈케이스를 어느 디렉터리에 만들지, "폴더 구조를 어떻게 잡을까", "feature를 어디에 둘까", "core에 넣을까 말까" 같은 질문이 나올 때 반드시 사용하세요. "프로젝트 구조", "디렉터리 구조", "레이어 분리", "clean architecture", "where does X live", "새 기능 추가" 같은 표현에 트리거합니다.
+description: Flutter 단일 패키지 레이어 구조·디렉터리 규칙·의존성 방향. "프로젝트 구조", "폴더 구조", "feature를 어디에", "clean architecture", "새 기능 추가", "레이어 분리" 질문에 사용.
 ---
 
 # Flutter 프로젝트 구조 (단일 패키지 / Clean Architecture)
@@ -13,7 +12,6 @@ description: |
 - **Feature는 `presentation` 하위에 폴더로 표현한다.** 여러 화면에서 공유되는 코드는 `core/`로 올리고, 단일 기능에만 쓰이는 코드는 해당 feature 폴더 안에 둔다.
 - **Feature 간 직접 참조 금지**. 교차 기능 공유 로직은 `core`(공유 위젯·유틸) 또는 `domain`(모델·유즈케이스)으로 올린다.
 
----
 
 ## 디렉터리 레이아웃
 
@@ -104,7 +102,6 @@ class IngredientScreen extends StatelessWidget {
 }
 ```
 
----
 
 ## 어디에 무엇을 두는가
 
@@ -124,7 +121,6 @@ class IngredientScreen extends StatelessWidget {
 | 공유 에러 타입 | `lib/core/domain/error/` | `result.dart`, `network_error.dart` |
 | 기능별 에러 | `lib/domain/error/` | `bookmark_error.dart`, `new_recipe_error.dart` |
 
----
 
 ## 의존성 규칙
 
@@ -138,7 +134,6 @@ class IngredientScreen extends StatelessWidget {
 
 `domain/` 파일에서는 `package:flutter/...` import가 나타나면 안 된다. 순수 Dart로 유지해 테스트와 재사용성을 확보한다.
 
----
 
 ## 기능을 추가할 때 (체크리스트)
 
@@ -157,7 +152,6 @@ class IngredientScreen extends StatelessWidget {
 
 이 순서를 지키면 각 레이어가 하위 레이어만 알게 되어 의존성이 뒤집히지 않는다.
 
----
 
 ## `core`에 올릴지 feature에 둘지 판단
 
@@ -170,7 +164,6 @@ class IngredientScreen extends StatelessWidget {
 - 예: `BigButton`, `SearchInputField`, `Result`, `NetworkError`.
 - 단, "언젠가 공유될 것 같다"는 이유만으로는 올리지 않는다. 실제 두 번째 사용처가 생길 때 이동한다.
 
----
 
 ## 핵심 라이브러리
 

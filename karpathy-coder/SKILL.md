@@ -1,12 +1,6 @@
 ---
 name: karpathy-coder
-description: Use when writing, reviewing, or committing code to enforce Karpathy's 4 coding principles — surface assumptions before coding, keep it simple, make surgical changes, define verifiable goals. Triggers on "review my diff", "check complexity", "am I overcomplicating this", "karpathy check", "before I commit", or any code quality concern where the LLM might be overcoding.
-context: fork
-version: 2.3.0
-author: Codex-skills
-license: MIT
-tags: [code-quality, discipline, karpathy, simplicity, surgical-changes, anti-patterns, review]
-compatible_tools: [Codex, codex-cli, cursor, antigravity, opencode, gemini-cli]
+description: Enforce Karpathy's 4 coding principles — surface assumptions, keep it simple, make surgical changes, define verifiable goals. Use when reviewing a diff, checking complexity, before committing, or when concerned about over-engineering.
 ---
 
 # Karpathy Coder — Active Coding Discipline

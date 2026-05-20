@@ -1,7 +1,6 @@
 ---
 name: flutter-navigation-go-router
-description: |
-  Flutter 프로젝트의 라우팅 패턴 — `go_router` 기반 경로 선언, `RoutePaths` 상수 관리, `StatefulShellRoute`로 바텀 내비게이션 구현, 경로 파라미터(`:recipeId`) 처리, `context.go`/`context.push` 사용. "라우트 추가", "go_router", "화면 이동", "네비게이션", "GoRoute", "StatefulShellRoute", "pathParameters", "딥링크" 같은 표현에 트리거합니다.
+description: Flutter go_router 라우팅 — RoutePaths 상수, StatefulShellRoute 바텀 내비게이션, 경로 파라미터, context.go/push 사용. "라우트 추가", "go_router", "화면 이동", "네비게이션", "GoRoute", "딜링크" 표현에 사용.
 ---
 
 # Flutter Navigation — go_router
@@ -13,7 +12,6 @@ description: |
 - **라우트 빌더는 Root 위젯만 만든다.** DI/이벤트/상태 구독은 Root 가 담당하므로 라우터는 Screen 에 대한 지식이 없다.
 - **크로스 feature 네비게이션은 `context.go` / `context.push` 콜백으로** 처리한다. Screen/Root 가 다른 feature 의 라우트 문자열을 알아도 된다는 것이 이 프로젝트의 관례다 — `RoutePaths` 상수를 통해서 참조하기 때문에 안전하다.
 
----
 
 ## 경로 상수
 
@@ -39,7 +37,6 @@ abstract class RoutePaths {
 - 중첩(서브) 경로는 상위 경로를 접두어로 포함 (`/Home/Ingredient/:recipeId`).
 - 경로 파라미터는 `:name` 토큰으로.
 
----
 
 ## GoRouter 정의
 
@@ -93,7 +90,6 @@ return MaterialApp.router(
 );
 ```
 
----
 
 ## 경로 파라미터 읽기
 
@@ -119,7 +115,6 @@ class IngredientRoot extends StatelessWidget {
 
 `IngredientRoot` 는 내부에서 `getIt<IngredientViewModel>()` 로 ViewModel 을 꺼내고 `loadRecipe(recipeId)` 를 디스패치한다.
 
----
 
 ## 화면 이동
 
@@ -154,7 +149,6 @@ onAction: (action) {
 
 즉 **상태를 바꾸는 Action** 은 ViewModel 로, **이동이라는 효과**는 `context.push` 로 분리한다.
 
----
 
 ## 바텀 내비게이션 — StatefulShellRoute
 
@@ -174,7 +168,6 @@ StatefulShellRoute.indexedStack(
 )
 ```
 
----
 
 ## 콜백을 통해 느슨하게 결합하기
 
@@ -191,7 +184,6 @@ GoRoute(
 
 이 방식은 **테스트 가능한 Screen** 을 만드는 핵심이다. Screen 이 `go_router` 를 직접 import 하지 않는다.
 
----
 
 ## 체크리스트 — 새 화면 라우트 추가
 
@@ -202,7 +194,6 @@ GoRoute(
 - [ ] 이동이 필요한 호출자는 `context.go` / `context.push` + `RoutePaths` 상수 사용
 - [ ] 단순 화면은 Screen 파라미터로 콜백(`onTap...`)을 받아 느슨하게 결합
 
----
 
 ## 안티 패턴
 

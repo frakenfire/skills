@@ -1,7 +1,6 @@
 ---
 name: flutter-testing
-description: |
-  Flutter 프로젝트의 테스트 작성 패턴 — `flutter_test` 기반 단위 테스트와 위젯 테스트, `ChangeNotifier` ViewModel 검증, Fake Repository, `pumpWidget` + `ListenableBuilder`, 스트림 검증. "테스트 작성", "ViewModel 테스트", "widget test", "pumpWidget", "Fake Repository", "Mock", "단위 테스트" 같은 표현에 트리거합니다.
+description: Flutter 테스트 패턴 — flutter_test 단위·위젯 테스트, ChangeNotifier ViewModel 검증, Fake Repository, pumpWidget, 스트림 검증. "테스트 작성", "ViewModel 테스트", "widget test", "Fake Repository", "단위 테스트" 표현에 사용.
 ---
 
 # Flutter 테스트
@@ -16,7 +15,6 @@ description: |
 
 프로젝트에는 `flutter_test` 외의 테스트 의존성이 없다. `mockito`/`mocktail` 을 도입하기 전에 **Fake** 로 먼저 작성해 본다 — 대부분 Fake 만으로 충분하고 유지보수가 쉽다.
 
----
 
 ## 디렉터리
 
@@ -32,7 +30,6 @@ test/
 - Unit test: `test/<layer>/<feature>/<file>_test.dart`
 - Widget test: `test/presentation/<feature>/<feature>_screen_test.dart`
 
----
 
 ## 단위 테스트 — UseCase
 
@@ -58,7 +55,6 @@ void main() {
 
 스트림의 첫 이벤트만 필요하면 `.first` 가 편하다. 여러 이벤트의 순서를 확인하려면 `expectLater(stream, emitsInOrder([...]))`.
 
----
 
 ## 단위 테스트 — ChangeNotifier ViewModel
 
@@ -114,7 +110,6 @@ viewModel.onAction(const IngredientAction.onTapIngredient());
 expect(notifyCount, 1);
 ```
 
----
 
 ## Fake 작성법
 
@@ -159,7 +154,6 @@ class FakeBookmarkRepository implements BookmarkRepository {
 - 실패 시나리오를 시뮬레이션할 변수를 둔다: `bool shouldReturnError = false;` → `if (shouldReturnError) return Result.error(...)`.
 - `BehaviorSubject` 대신 `StreamController.broadcast()` + 수동 `add()` 로 충분하다 (rxdart 의존 없이).
 
----
 
 ## 위젯 테스트 — Screen 분리 덕분에 쉽다
 
@@ -210,7 +204,6 @@ void main() {
 - 다이얼로그/스낵바/네비게이션은 Root 책임이라 Screen 테스트에서는 검증할 필요가 없다.
 - 이미지·네트워크가 들어간 위젯은 `NetworkImage` 가 테스트 환경에서 실패할 수 있다. 필요하면 `provideMockedNetworkImages` 헬퍼를 만들거나, 이미지 부분을 프리뷰 플래그로 분기한다.
 
----
 
 ## Root 위젯 테스트는 언제?
 
@@ -224,7 +217,6 @@ setUp(() {
 });
 ```
 
----
 
 ## Robot 패턴 — 복잡한 화면 테스트
 
@@ -267,7 +259,6 @@ await IngredientRobot(tester)
     .then((r) => r.expectRecipeName('Pizza'));
 ```
 
----
 
 ## 무엇을 테스트할 것인가
 
@@ -277,7 +268,6 @@ await IngredientRobot(tester)
 - **Data 레이어**: 매핑(`fromJson`) 이 까다로운 곳은 goldens 대신 단순 `expect` 로 키 필드 검증.
 - **통합 테스트**: 실제 end-to-end 시나리오 (로그인 → 홈 → 상세) 는 `integration_test/` 에.
 
----
 
 ## 체크리스트
 
@@ -287,7 +277,6 @@ await IngredientRobot(tester)
 - [ ] Fake 는 `test/fake/` 아래 공유
 - [ ] `dispose()` 에서 스트림 취소 로직이 있다면 ViewModel 테스트에서 `dispose()` 를 명시적으로 호출해 검증
 
----
 
 ## 안티 패턴
 
