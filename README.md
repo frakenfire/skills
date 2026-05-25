@@ -18,6 +18,8 @@
 4. 실행하지 않은 항목은 `NOT_VERIFIED`로 남긴다.
 5. API/Secret이 없어 막힌 항목은 `BLOCKED_BY_SECRET`로 분리한다.
 6. 완료는 코드 작성이 아니라 build/lint/test/dev 등 물리적 검증 통과를 뜻한다.
+7. **에이전트 스킬 배포/설치 규칙**: 새로운 스킬이나 업데이트가 필요할 때, 에이전트는 `/` 및 `@` 슬래시/멘션 목록에 정상 인식되도록 **로컬 프로젝트 경로(`C:\Users\fpdlw\.gemini\antigravity-ide\skills`)와 글로벌 에이전트 설정 경로(`C:\Users\fpdlw\.gemini\config\skills`) 두 곳 모두에 완전하게 설치/동기화**해야 한다.
+
 
 ---
 
