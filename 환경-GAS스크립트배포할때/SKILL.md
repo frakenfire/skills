@@ -9,58 +9,25 @@ description: Google Apps Script and clasp production deployment. Use when workin
 
 1. **검증되지 않은 코드는 존재하지 않는다**: 완료 기준은 '실행'이 아니라 '물리적 검증'이다.
 2. **5회 반복 검증 (5x Robustness Verification)**: 시스템의 정합성과 일관성을 담보하기 위해, 배포 전후로 Headless 검증 하네스(doPost API Executable 등)를 **최소 5회 연속 실행**하여 모든 결과가 `BLOCKER: 0` 및 완벽하게 동일한 결과값(`ok: true`)을 유지하는지 교차 확인한다.
-3. **보안 및 권한 격리 (난독화 내장 실행)**: 다른 컴퓨터 환경에서 크리덴셜 파일이 없을 때 즉각 복구할 수 있도록, **GCP 서비스 계정 키를 Base64 인코딩(난독화)하여 본 스킬 파일에 안전하게 내장**한다. 이를 통해 GitHub Push Protection(보안 스캔 규칙)을 우회하면서, 임의의 대화창에서 아래 복원 코드로 원클릭 파일 복원이 가능하도록 보장한다.
-4. **clasp 실행 권한 격리 및 자기복구**: `clasp push` 업로드 성공이 원격 함수 실행 성공을 보장하지 않으므로, API Executable 배포, access 설정(`ANYONE` / `ANYONE_ANONYMOUS`), OAuth 스코프 점검을 철저히 수행하여 예외 발생 시 자기복구(Self-recovery)가 가능하도록 한다.
+3. **clasp 실행 권한 격리 및 자기복구**: `clasp push` 업로드 성공이 원격 함수 실행 성공을 보장하지 않으므로, API Executable 배포, access 설정(`ANYONE` / `ANYONE_ANONYMOUS`), OAuth 스코프 점검을 철저히 수행하여 예외 발생 시 자기복구(Self-recovery)가 가능하도록 한다.
 
 ---
 
-## 🔑 내장 크리덴셜 데이터 (Obfuscated Base64 Credential)
+## 🔑 자격 증명 및 프로젝트 설정 (Project Setup)
 
-다른 컴퓨터 환경에서 작업 시, 아래 Base64 텍스트를 로컬 폴더에서 디코딩하여 `service-account.json` 파일로 복구한다.
+이 스킬은 특정 프로젝트에 종속되지 않습니다 (Globalized). 
+새로운 프로젝트에 배포할 때, 사용자의 프로젝트 환경에 맞게 다음 설정 파일들이 필요합니다.
 
-### 1. GCP Service Account Key Base64
-```text
-ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAidHJpYmFsLWFm
-ZmluaXR5LTQ2OTAxMC1jNCIsCiAgInByaXZhdGVfa2V5X2lkIjogImNlNDQwYzY2NGE1MzVhMGRj
-OTQzZjBkN2lmYTgxNDQ0NThhZmQxM2UiLAogICJwcml2YXRlX2tleSI6ICItLS0tLUJFR0lOIFBS
-SVZBVEUgS0VZLS0tLS1cbk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQkthd2dnU2tB
-Z0VBQW9JQkFRRElxcURrOXg4Nld3eU9cbm13OWd0WmU4QW9Xei9KQnNpVWxWd2cySDc1T3IxY2ZU
-UitzS3k3ekE4bDFqNXo3OGNpYUViR2tlbmdkc1ZVNmRcbi5QSjJ4ck1wN3lTYWRCSm1VUTJnemVW
-ejZUc1N6L1FuU005RXkzSDRTVjhTczVrZDVwNUxoTnhhSEFOWlE5UGtcbmcQcU1rYnphendmdUVo
-Z3J2akNERWtHNWo3ZkVZMnRxTEtqaEdEN1dkcUFUSVJoT3ZSdzJlTitDKzVVWEVtbVdcbllQY1hw
-T2Y5WFVDR0lZL0VmY1VtYjZ0T0w5a3NNMW1mU2RIYUVwbnhYRGhCMnF1djhabWt0cnVlMTc3ZFVQ
-TENcbnV1RFdQN21HTjNtRStuOXJpQmZZQ2lqWUJoTGtkeUhzVm9JYXhnRUJmV25OL1E5czFYMGZk
-MjkwZklBeDFnR09ceG5GWFBUN0ZWaEFnTUJBQUVDZ2dFQU5icHRFMEhJbHN2cVZOVFlEVUVTVzlra
-EM4eDRyMWNqTjc4NStFZ0I5bVRMXG5tSnNOS0ZkTTV5eHZPcFNSeTRaZWlPOUVlR21neTlrVll6
-MGJ6Rk5EOUZvK0dKVCt1bUJDS21ZNHF4MGtOajFcdW52OFg0SWZKUUhFNTRyRU1NcUZwaVRjTitX
-Syswc3dDbEpCczFDN0JycVQ0cnBwUnRvUzZ5T1RXN0dTN0ErNVJcZ3lWTS92T3F4R2pjc2xpSTJU
-enhjbkRpbXpzeGpPVVBJRVN1NEFVenNtRWxtR2lxS0JBVm5SZml3dTVoakF0Q1wxOThoYWlnaFA1
-S3FxSU1ZdEdLZFNFLzhkTkk4M24rd3VuWS9ESG5CQmdNVkNBbktxY2JyN2pUQWF6V1c0VGpyXGZ6
-cHdJV3FVUVFoL2VRQm9wSFpnNlJSek9MRi90TFd5eE5ZeTRmOXE4UUtCZ1FEclB0MXAzQWFLYlpK
-NnlwUHRcODhNUEErSk5hWVprT3QxajRJaWhsMzNBWm1wOUFEOFJyVklpTDIyZGRTdCt5SWUxdi9q
-SFE0M0luWk9jRGw4RWNcbkJBQ01YZEI0ZzBZYVdaNGVEQnh4TnNrNExScHJuYjV0ZnJFN2RSM1Zx
-K2RJK3k3cmM0UUFiUnJlSDRZVmk2UVxueE9NUWV6dmwvcXR6YUpQdDBqNURLbUhiMndLQmdRRGFY
-UXR2dmV6NWp2R04rNEp3cUhjY3hKbzZVWTguasmtZVxyclFjUThscnFadDkvWERBcWpjdkhEaTFD
-bm1iblZ4MGlwV0lZU1VtYXlOc09SWGl4bm1KYnVqSXVFSDg4ZFVialxueDg1bHlUdWFublBTZFU0
-SUZDM3RiSkFwbVVuVE1PQWNlM3drYmpudzNYdTQyWTB3ZUJMNUtwbzkwUU9GUVdPVVxuZkEwZXBZ
-b05ld0tCZ1FDbW1LS2M4V0VBYjVDb3ZRWCtIOS92QUJyNml0dWwvRnBaZjNjMGpnUUpYZU1ocndq
-ZlxuS2NYb3dLRW94M0FQUjYxalVNaU43RUVkUVU5R2g5OEE2bVB2bkNBcUJiaFdrNEw0Vy9ialF6
-N1o1TFR6T1ljXG4rYTlaLzBQVUwrTzJXVmF4b3VpblJVMTg4UHl1QjNwNmF6Uk9XN2VUcmNNbHZB
-M25BbG1BQ1IrOFdRS0JnUUNlXG44dVcxUkNId2txMmdkWHpBdXRCaGYzYm9ocC9XNEtkcWNENGdC
-dlJJOWZNd1NSSENtQTdDYWI1NVVkQ0VDelJwXG4weVB4bTc5WlRXV3ZJTUMzUWh4RXV1ZDJBb3Ju
-dzZuaXkwdGpaWFRJMnhoaUZRTmtCQk9VK3hhQlFWU3N4MElMXG5XWlBIREZsZUxxNEJwdzRzckhV
-Nzc3d3ltbHVvV2QwR1V5UGgxNVRhd0tCZ0JMNjB3UlBpdFRBRzNmRkZRbWZcbjE5V0J4ZC93UkRB
-SENyWnpKaU9ZR2RlU2djV2hURXpaMkRMQ09BQ09SVDJzY1VTbTRUUEQwODhxU2dzeW1iRW5cbmIr
-MC92L2Y4dHlWREZlYmdMeFZTNW9mRTREZ3pidjBHQ213RTI2aUxPRFNSZklkTVFaNDkxUGp3N0x1
-RTdhU0RcbmpsV0Q1WHlXMjRFVkpCTFZDVzVXV09LMlxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0t
-LVxuIiwKICAiY2xpZW50X2VtYWlsIjogInlzLWxlZUB0cmliYWwtYWZmaW5pdHktNDY5MDEwLWM0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwKICAiY2xpZW50X2lkIjogIjExMTY5NjU5MDE0NzU1MjgwNzQ2NSIsCiAgImF1dGhfdXJpIjogImh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi9hdXRoIiwKICAidG9rZW5fdXJpIjogImh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwKICAiYXV0aF9wcm92aWRlcl94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsCiAgImNsaWVudF94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3JvYm90L3YxL21ldGFkYXRhL3g1MDkveXMtbGVlJTRMdHJpYmFsLWFmZmluaXR5LTQ2OTAxMC1jNC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsCiAgInVuaXZlcnNlX2RvbWFpbiI6ICJnb29nbGVhcGlzLmNvbSIKfQ==
-```
+### 1. GCP Service Account Key (`service-account.json`)
+현재 프로젝트의 GCP 서비스 계정 키 파일(`service-account.json`)이 로컬 폴더에 존재해야 합니다.
+없을 경우, `clasp login` 기반의 OAuth 로컬 인증 토큰(`~/.clasprc.json`)을 대체제로 사용합니다.
 
 ### 2. Clasp Project 설정 (`.clasp.json`)
+해당 프로젝트 폴더에 `.clasp.json` 파일이 있어야 합니다.
 ```json
 {
-  "scriptId": "1y3TP7fwJkTLzFEXpBTZkQKTtGyPiG6efWeBOmJbbfjlOVREVIUXXtHMF",
-  "projectId": "tribal-affinity-469010-c4",
+  "scriptId": "<YOUR_SCRIPT_ID>",
+  "projectId": "<YOUR_GCP_PROJECT_ID>",
   "rootDir": ""
 }
 ```
@@ -71,18 +38,9 @@ LVxuIiwKICAiY2xpZW50X2VtYWlsIjogInlzLWxlZUB0cmliYWwtYWZmaW5pdHktNDY5MDEwLWM0Lmlh
 
 본 시스템의 배포와 검증은 아래의 **5단계 파이프라인**을 따라 다른 컴퓨터 환경에서도 완벽히 무결하게 재구성하여 실행된다.
 
-### [1단계] 로컬 환경 세팅 및 인증 키 복원
-1. 로컬 환경에 `.clasp.json` 파일을 작성한다.
-2. 스킬에 내장된 Base64 데이터를 디코딩하여 `service-account.json`을 복구하는 코드를 실행하여 로컬에 생성한다.
-   * **Linux/macOS 복구 명령어**:
-     ```bash
-     echo "ewogICJ0eXBlIjog..." | base64 --decode > service-account.json
-     ```
-   * **Windows PowerShell 복구 명령어**:
-     ```powershell
-     $base64 = "ewogICJ0eXBlIjog..."
-     [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64)) | Out-File -FilePath "service-account.json" -Encoding utf8
-     ```
+### [1단계] 로컬 환경 세팅 및 인증 키 준비
+1. 로컬 환경에 해당 프로젝트의 `.clasp.json` 파일이 있는지 확인합니다.
+2. (선택사항) GCP 서비스 계정 키(`service-account.json`)를 프로젝트 루트에 배치하거나, 글로벌 `clasp` 토큰(`~/.clasprc.json`) 인증을 사용합니다.
 3. 라이브러리 의존성을 설치한다.
    ```bash
    npm install google-auth-library googleapis
@@ -108,7 +66,7 @@ const actionArg = process.argv[2] || 'runHarness';
 
 const auth = new GoogleAuth({
   keyFile: keyPath,
-  scopes: ['https://www.googleapis.com/auth/drive'] // 웹앱 API Executable 실행용 범위
+  scopes: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/spreadsheets'] // 웹앱 API Executable 실행용 범위
 });
 
 async function run() {
@@ -198,8 +156,8 @@ Write-Host "=============================================" -ForegroundColor Gree
 ## 🚨 트러블슈팅 및 비상 대책
 
 ### 1. 403 org_internal 에러가 나타날 때
-* **원인**: 조직 내부(`pcalm.co.kr`)의 엄격한 자격 제한 조건으로 인해 외부 CLI 접근 차단.
-* **해결**: `.clasp.json` 파일의 `projectId`가 `tribal-affinity-469010-c4` 인지 재확인하고, `ys-lee@tribal-affinity-469010-c4.iam.gserviceaccount.com` 서비스 계정에 시트/드라이브의 `편집자` 권한이 최종 상속되었는지 드라이브 UI에서 확인한다.
+* **원인**: 조직 내부의 엄격한 자격 제한 조건으로 인해 외부 CLI 접근 차단.
+* **해결**: `.clasp.json` 파일의 `projectId`가 올바른지 확인하고, 인증된 계정에 시트/드라이브의 `편집자` 권한이 부여되었는지 드라이브 UI에서 재확인한다.
 
 ### 2. 구글 제한(Version 200개 초과)에 걸릴 때
 * **원인**: Google Apps Script 웹 플랫폼 내 버전 히스토리가 200개 상한선 도달.
