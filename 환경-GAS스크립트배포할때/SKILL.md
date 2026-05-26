@@ -204,3 +204,15 @@ Write-Host "=============================================" -ForegroundColor Gree
 ### 2. 구글 제한(Version 200개 초과)에 걸릴 때
 * **원인**: Google Apps Script 웹 플랫폼 내 버전 히스토리가 200개 상한선 도달.
 * **해결**: Apps Script 에디터 웹 UI -> `프로젝트 기록 (Project History)` 탭에 진입하여 쓰지 않는 예전 버전들을 수동 정리해 가용 공간을 확보한다.
+
+### 3. 내장 크리덴셜 파싱 오류 또는 파일 손상 시 (clasp 토큰 우회법)
+* **원인**: 문서 포맷팅 과정에서 내장된 Base64 텍스트에 물리적인 줄바꿈이나 이스케이프 문자(`\c`, `\n` 등)가 잘못 혼입되어 `service-account.json` 파싱 시 `Bad control character` 등 JSON 오류가 발생할 수 있다.
+* **해결**: 서비스 계정 대신, 로컬에 이미 로그인되어 있는 사용자의 글로벌 `clasp` OAuth 토큰(`~/.clasprc.json`)을 읽어와 직접 웹앱(API Executable)에 POST 요청을 날리는 우회 스크립트를 작성하여 하네스를 실행한다.
+  ```javascript
+  const fs = require('fs');
+  const os = require('os');
+  const path = require('path');
+  const token = JSON.parse(fs.readFileSync(path.join(os.homedir(), '.clasprc.json'), 'utf8')).tokens.default.access_token;
+  
+  // url과 actionArg는 기존 runHarnessWebapp.js와 동일하게 설정 후 fetch
+  ```
