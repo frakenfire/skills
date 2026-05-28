@@ -80,6 +80,20 @@ clasp push --force
 
 이 패턴에서는 `clasp push --force`가 성공하면 배포 반영은 된 것이다. 단, 원격 실행 검증은 Apps Script UI에서 실행하거나 API Executable 설정 후 `clasp run`으로 별도 검증해야 한다.
 
+#### 로그인된 Chrome/Apps Script UI로 실제 실행까지 확인하는 방법
+
+API Executable 배포가 없고 `clasp run`이 막혀도, 사용자의 Chrome 로그인 세션으로 Apps Script 편집기에서 지정 함수만 실행하면 실제 Drive/Sheets 권한으로 운영 작업을 끝낼 수 있다.
+
+1. `clasp push --force` 직후 Apps Script 편집기 URL을 연다.
+2. 함수 선택 드롭다운에서 검증/정리 함수 하나만 고른다. 전체 복구 함수와 부분 정리 함수를 혼동하지 않는다.
+3. 실행 버튼을 눌러 Apps Script 실행 로그 패널에서 `실행이 시작됨`, 핵심 `console.log`, `실행이 완료됨`을 확인한다.
+4. 실행 직후 반드시 원천을 다시 읽어 물리적으로 검증한다.
+   - 시트: `get_spreadsheet_cells`로 링크가 비워졌거나 라벨 링크로 정리됐는지 확인
+   - 폴더: `list_folder`로 파일이 목표 개인 폴더 바로 아래로 이동했는지 확인
+   - 파일: `get_file_metadata`로 `createdTime`, `modifiedTime`, `parents`를 확인
+5. 운영성 정리 함수는 파일 ID와 행/사번을 명시한 allowlist 방식으로 작성한다. Drive 전체 검색 결과를 움직이는 임시 함수는 만들지 않는다.
+6. 결과는 Google Chat 요약 1건과 로그 시트에 남기고, 선택서류 빈칸이나 정상 스킵은 Chat으로 폭주시키지 않는다.
+
 ### [2.6단계] Google Form 파일 정리 자동화 안전 기준
 구글폼 업로드 파일을 직원별 폴더로 정리하는 자동화는 특히 오매칭 위험이 크다. 다음 기준을 기본값으로 둔다.
 
