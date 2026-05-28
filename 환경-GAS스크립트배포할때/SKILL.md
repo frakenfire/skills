@@ -1,6 +1,6 @@
 ---
 name: gas-deploy
-description: Google Apps Script and clasp production deployment. Use when working on Apps Script projects — clasp push/deploy/run, installable triggers, time-driven automations, Google Chat/Gmail/Sheets automation, or verifying and repairing triggers without manual UI interaction, with 5x robust verification and obfuscated embedded credentials.
+description: Google Apps Script and clasp production deployment. Use when working on Apps Script projects — clasp push/deploy/run, installable triggers, time-driven automations, Google Chat/Gmail/Sheets automation, direct Google Sheet/Drive source inspection, or verifying and repairing triggers when clasp run/API Executable is unavailable, with robust validation and safe production guardrails.
 ---
 
 # Google Apps Script / clasp 운영 배포 & 5회 연속 신뢰성 검증 스킬
@@ -10,6 +10,8 @@ description: Google Apps Script and clasp production deployment. Use when workin
 1. **검증되지 않은 코드는 존재하지 않는다**: 완료 기준은 '실행'이 아니라 '물리적 검증'이다.
 2. **5회 반복 검증 (5x Robustness Verification)**: 시스템의 정합성과 일관성을 담보하기 위해, 배포 전후로 Headless 검증 하네스(doPost API Executable 등)를 **최소 5회 연속 실행**하여 모든 결과가 `BLOCKER: 0` 및 완벽하게 동일한 결과값(`ok: true`)을 유지하는지 교차 확인한다.
 3. **clasp 실행 권한 격리 및 자기복구**: `clasp push` 업로드 성공이 원격 함수 실행 성공을 보장하지 않으므로, API Executable 배포, access 설정(`ANYONE` / `ANYONE_ANONYMOUS`), OAuth 스코프 점검을 철저히 수행하여 예외 발생 시 자기복구(Self-recovery)가 가능하도록 한다.
+4. **원천 확인 우선**: 시트 구조, 실제 셀 링크, Drive 파일/폴더 상태, 현재 Apps Script 코드, 설치 트리거를 직접 확인하기 전에는 매칭/복구 로직을 추정하지 않는다.
+5. **불필요한 원격 실행 설정 금지**: `clasp run`이 막혀도 즉시 API Executable을 만들지 않는다. Apps Script UI에서 수동 실행하면 충분한 경우에는 `clasp push` + UI 실행 절차를 보고하고, API Executable은 CLI 원격 실행이 실제로 필요한 때만 설정한다.
 
 ---
 
@@ -50,6 +52,47 @@ description: Google Apps Script and clasp production deployment. Use when workin
 ```bash
 clasp push --force
 ```
+
+### [2.5단계] clasp run이 막힌 실전 운영 패턴
+`clasp run` 실패는 흔하다. 특히 `Script function not found. Please make sure script is deployed as API executable.`가 나오면 코드가 없는 것이 아니라 원격 실행 배포/인증 경로가 없는 것이다.
+
+이때는 아래 순서로 처리한다.
+
+1. `clasp clone <scriptId>` 또는 기존 로컬 프로젝트에서 실제 Apps Script 코드를 먼저 읽는다.
+2. `.clasp.json`, `appsscript.json`, 트리거 설치 함수, 운영 엔트리포인트를 확인한다.
+3. `rg`로 위험 패턴을 검색한다.
+   ```bash
+   rg -n "MailApp|GmailApp|Session\.getActiveUser|Session\.getEffectiveUser|DriveApp\.searchFiles|Drive\.Files\.list|newTrigger|deleteTrigger|getProjectTriggers|tryRecover|find.*Candidate|score.*Candidate" .
+   ```
+4. Google Sheets API가 OAuth/GCP 제한으로 막히면, 사용 가능한 Google Drive/Sheets 커넥터나 로그인된 브라우저 UI로 우회하여 실제 셀 값을 확인한다.
+   - 일반 값: `get_spreadsheet_range`
+   - 링크/수식/리치텍스트: `get_spreadsheet_cells`
+   - 특정 사람/행 찾기: `search_spreadsheet_rows`
+   - 폴더 파일 목록: Drive `list_folder`
+   - 파일 부모/생성일/수정일: Drive `get_file_metadata`
+5. Apps Script API Executable은 CLI에서 함수를 직접 실행해야 할 때만 설정한다. 위치는 Apps Script 편집기 `배포 > 새 배포 > 유형 선택(톱니바퀴) > API 실행 파일`이다. 필요한 경우 `appsscript.json`에 아래 설정을 추가한다.
+   ```json
+   "executionApi": {
+     "access": "ANYONE"
+   }
+   ```
+6. API Executable 설정이 없으면, 검증 함수 실행 순서를 운영자에게 명확히 보고한다. 예: `testRestoreRow38()` 먼저 실행, 로그 확인 후 전체 복구 함수 실행.
+
+이 패턴에서는 `clasp push --force`가 성공하면 배포 반영은 된 것이다. 단, 원격 실행 검증은 Apps Script UI에서 실행하거나 API Executable 설정 후 `clasp run`으로 별도 검증해야 한다.
+
+### [2.6단계] Google Form 파일 정리 자동화 안전 기준
+구글폼 업로드 파일을 직원별 폴더로 정리하는 자동화는 특히 오매칭 위험이 크다. 다음 기준을 기본값으로 둔다.
+
+1. 구글폼이 기록한 시트 셀 링크만 파일 원천으로 사용한다.
+2. Drive 전체 검색, 후보 점수 계산, 파일명 기반 자동 매칭, 미분류 파일 자동 이동을 금지한다.
+3. 선택서류 빈칸은 조용히 스킵하고 로그만 남긴다.
+4. 필수서류 빈칸은 누락으로 보고한다.
+5. 깨진 링크나 권한 없는 파일은 `FILE_NOT_FOUND`로 보고하고 해당 파일만 스킵한다.
+6. 같은 Drive 파일 ID가 여러 직원/행에 연결되어 있으면 자동 이동하지 말고 `DUPLICATE_FILE_LINK`로 보고한다.
+7. 인사기록카드처럼 현재 수집하지 않는 문서는 처리 목록에서 제외한다.
+8. 한 행 오류가 전체 실행을 멈추지 않게 하고, 전체 복구 중 파일별 성공 Chat 폭탄을 금지한다.
+9. 운영 알림은 Google Chat 요약으로 통일하고 `MailApp.sendEmail`, `Session.getActiveUser`, `Session.getEffectiveUser`는 사용하지 않는다.
+10. 실제 전체 복구 실행 전에는 특정 행 테스트 함수와 기대 로그를 먼저 제시한다.
 
 ### [3단계] 검증용 NodeJS 러너(Runner) 설정 파일 배치
 GCP 서비스 계정 키 파일(`service-account.json`)을 바탕으로 API Executable 웹앱에 POST 요청을 전송하여 하네스를 실행하는 `runHarnessWebapp.js` 파일을 로컬에 동적으로 자동 구성한다.
