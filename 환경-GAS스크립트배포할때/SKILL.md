@@ -89,10 +89,11 @@ clasp push --force
 4. 필수서류 빈칸은 누락으로 보고한다.
 5. 깨진 링크나 권한 없는 파일은 `FILE_NOT_FOUND`로 보고하고 해당 파일만 스킵한다.
 6. 같은 Drive 파일 ID가 여러 직원/행에 연결되어 있으면 자동 이동하지 말고 `DUPLICATE_FILE_LINK`로 보고한다.
-7. 인사기록카드처럼 현재 수집하지 않는 문서는 처리 목록에서 제외한다.
-8. 한 행 오류가 전체 실행을 멈추지 않게 하고, 전체 복구 중 파일별 성공 Chat 폭탄을 금지한다.
-9. 운영 알림은 Google Chat 요약으로 통일하고 `MailApp.sendEmail`, `Session.getActiveUser`, `Session.getEffectiveUser`는 사용하지 않는다.
-10. 실제 전체 복구 실행 전에는 특정 행 테스트 함수와 기대 로그를 먼저 제시한다.
+7. 성별과 문서유형을 교차검증한다. 특히 `성별=여성`인 행의 `병적 증명서` 링크는 있어도 자동 이동하지 말고 `MILITARY_DOC_GENDER_MISMATCH`로 보고한다.
+8. 인사기록카드처럼 현재 수집하지 않는 문서는 처리 목록에서 제외한다.
+9. 한 행 오류가 전체 실행을 멈추지 않게 하고, 전체 복구 중 파일별 성공 Chat 폭탄을 금지한다.
+10. 운영 알림은 Google Chat 요약으로 통일하고 `MailApp.sendEmail`, `Session.getActiveUser`, `Session.getEffectiveUser`는 사용하지 않는다.
+11. 실제 전체 복구 실행 전에는 특정 행 테스트 함수와 기대 로그를 먼저 제시한다.
 
 ### [3단계] 검증용 NodeJS 러너(Runner) 설정 파일 배치
 GCP 서비스 계정 키 파일(`service-account.json`)을 바탕으로 API Executable 웹앱에 POST 요청을 전송하여 하네스를 실행하는 `runHarnessWebapp.js` 파일을 로컬에 동적으로 자동 구성한다.
