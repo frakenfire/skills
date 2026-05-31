@@ -27,6 +27,7 @@ const ONBOARDING_SURVEY_CFG = {
 
   TRIGGER_HANDLER: 'runOnboardingSurveyAutomation',
   TRIGGER_HOUR: 9,
+  TRIGGER_MIN: 30,
 
   REMINDER_START_AFTER_DAYS: 1,
 
@@ -985,19 +986,21 @@ function installOnboardingSurveyTrigger() {
     .timeBased()
     .everyDays(1)
     .atHour(ONBOARDING_SURVEY_CFG.TRIGGER_HOUR)
+    .nearMinute(ONBOARDING_SURVEY_CFG.TRIGGER_MIN)
     .create();
 
   Logger.log(
     '[SURVEY][TRIGGER] 설치 완료 / 삭제=' +
     deleted +
     ' / 매일 ' +
-    ONBOARDING_SURVEY_CFG.TRIGGER_HOUR +
-    '시'
+    ONBOARDING_SURVEY_CFG.TRIGGER_HOUR + ':' +
+    ('0' + ONBOARDING_SURVEY_CFG.TRIGGER_MIN).slice(-2)
   );
 
   SpreadsheetApp.getActiveSpreadsheet().toast(
     '온보딩 만족도 설문 발송 트리거 설치 완료',
-    '매일 ' + ONBOARDING_SURVEY_CFG.TRIGGER_HOUR + '시',
+    '매일 ' + ONBOARDING_SURVEY_CFG.TRIGGER_HOUR + ':' +
+    ('0' + ONBOARDING_SURVEY_CFG.TRIGGER_MIN).slice(-2),
     5
   );
 }

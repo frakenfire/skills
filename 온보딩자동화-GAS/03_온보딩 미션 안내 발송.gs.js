@@ -47,6 +47,7 @@ const MISSION_GUIDE_CFG = {
 
   TRIGGER_HANDLER: 'runOnboardingMissionGuideAutomation',
   TRIGGER_HOUR: 9,
+  TRIGGER_MIN: 30,
 
   MISSION_LAUNCH_DATE: '2026-05-19',
 
@@ -799,18 +800,22 @@ function installOnboardingMissionGuideTrigger() {
 
   ScriptApp.newTrigger(MISSION_GUIDE_CFG.TRIGGER_HANDLER)
     .timeBased()
-    .everyHours(1)
+    .everyDays(1)
+    .atHour(MISSION_GUIDE_CFG.TRIGGER_HOUR)
+    .nearMinute(MISSION_GUIDE_CFG.TRIGGER_MIN)
     .create();
 
   Logger.log(
     '[MISSION][TRIGGER] 설치 완료 / 삭제=' +
     deleted +
-    ' / 1시간 주기 (리마인드는 ' + MISSION_GUIDE_CFG.TRIGGER_HOUR + '시)'
+    ' / 매일 ' + MISSION_GUIDE_CFG.TRIGGER_HOUR + ':' +
+    ('0' + MISSION_GUIDE_CFG.TRIGGER_MIN).slice(-2)
   );
 
   SpreadsheetApp.getActiveSpreadsheet().toast(
     '온보딩 미션 안내 발송 트리거 설치 완료',
-    '1시간 주기 (리마인드는 ' + MISSION_GUIDE_CFG.TRIGGER_HOUR + '시)',
+    '매일 ' + MISSION_GUIDE_CFG.TRIGGER_HOUR + ':' +
+    ('0' + MISSION_GUIDE_CFG.TRIGGER_MIN).slice(-2),
     5
   );
 }
