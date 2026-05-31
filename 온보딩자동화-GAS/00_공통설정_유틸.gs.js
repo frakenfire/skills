@@ -445,3 +445,4 @@ function installAllTriggers() {
     ui.alert("❌ 트리거 설치 실패", "트리거 설치 도중 에러가 발생했습니다:\n" + e.message, ui.ButtonSet.OK);
   }
 }
+

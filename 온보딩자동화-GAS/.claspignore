@@ -1,0 +1,11 @@
+**/node_modules/**
+package.json
+package-lock.json
+.clasp.json
+service-account.json
+.clasprc.json
+decoder.js
+fix_json.js
+runHarnessWebapp.js
+runWithClaspToken.js
+test_sheets.js
