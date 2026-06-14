@@ -1,10 +1,22 @@
 name: ppyong_ppyong_blockpop
-description: "뿅뿅 블록팝 - 캐주얼 낙하형 블록 퍼즐. 엔진 독립 게임코어 (pure Dart). Flutter + Flame 앱의 lib/core 로 재사용."
+description: "뿅뿅 블록팝 - 캐주얼 낙하형 블록 퍼즐 (Flutter + Flame)."
 publish_to: none
 version: 0.1.0
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.18.0
+  shared_preferences: ^2.2.0
 
 dev_dependencies:
-  test: ^1.24.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

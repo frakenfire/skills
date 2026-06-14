@@ -1,5 +1,5 @@
 import 'package:ppyong_ppyong_blockpop/core/systems/combo_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('콤보 (PRD §13 / §31.6)', () {

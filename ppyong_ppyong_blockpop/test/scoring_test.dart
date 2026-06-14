@@ -1,5 +1,5 @@
 import 'package:ppyong_ppyong_blockpop/core/systems/scoring_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('점수 (PRD §12 / §31.5)', () {

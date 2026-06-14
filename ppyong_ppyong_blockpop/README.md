@@ -19,13 +19,22 @@
 ## 구조
 
 ```
-lib/core/
-├─ game_engine.dart                  ← 헤드리스 오케스트레이터 (spawn→drop→lock→clear→score→fever→캐릭터)
-├─ constants/                        ← 보드/점수/피버 상수 (PRD §6,§7,§9,§10,§12,§14)
-├─ models/                           ← Board, Piece
-├─ systems/                          ← bag / collision / rotation / scoring / combo / fever / line_clear / character / economy
-└─ states/game_state.dart            ← 상태 머신 (PRD §24)
-test/                                ← QA 케이스(PRD §31) 매핑 단위 테스트
+lib/
+├─ main.dart                         ← 진입점 (세로 고정, 저장 로드 후 runApp)
+├─ app_state.dart                    ← 전역 상태 + 진행도 반영(코인/도감/최고점)
+├─ core/                             ← 엔진 독립 게임 로직 (pure Dart)
+│  ├─ game_engine.dart               ←  헤드리스 오케스트레이터 (spawn→drop→lock→clear→score→fever→캐릭터)
+│  ├─ constants/ models/ systems/ states/
+├─ domain/models/                    ← 저장 모델 (player/settings/skins/collection/save) (§23)
+├─ data/save/                        ← SharedPreferences 저장소 (§26.3 Storage)
+└─ ui/
+   ├─ app.dart                       ← MaterialApp + 라우팅
+   ├─ theme/                         ← 파스텔 팔레트, 블록/배경 스킨 (§21)
+   ├─ game/blockpop_game.dart        ← Flame 게임 (보드 렌더링 + 자동 낙하)
+   ├─ widgets/                       ← ScorePanel/FeverGauge/NextPiece/ControlButtons/리액션 오버레이
+   └─ screens/                       ← Splash/Main/Game/Result/Settings/Shop/Collection (§19)
+test/                                ← QA(§31) 단위 + 저장 직렬화 + 위젯 스모크
+android/  web/                       ← 플랫폼 (Android 1차 타깃, web은 빌드 검증용)
 ```
 
 ## 구현된 게임 규칙 (PRD 매핑)
@@ -41,12 +50,14 @@ test/                                ← QA 케이스(PRD §31) 매핑 단위 �
 - 캐릭터 리액션 5종 + 우선순위 (양/팬더/토끼/강아지/카피바라) (§15)
 - 코인 지급 공식 (§18.2)
 
-## 테스트 실행
+## 실행 / 테스트
 
 ```bash
-dart pub get
-dart test          # 51개 통과
-dart analyze       # 이슈 없음
+flutter pub get
+flutter test            # 56개 통과 (코어 QA 51 + 저장 + 위젯 스모크)
+flutter analyze         # 이슈 없음
+flutter run             # 실행 (Android 1차 타깃)
+flutter build web       # 전체 컴파일 검증용
 ```
 
 ### QA 케이스 커버리지 (PRD §31)
@@ -66,8 +77,8 @@ dart analyze       # 이슈 없음
 
 ## 다음 단계 (미구현 — 이후 세션)
 
-Flutter + Flame UI(8화면), 로컬 저장(§23), 스킨·도감(§16,§17), 사운드(§22),
-튜토리얼(§28), 광고 Mock 인터페이스(§18.4). 자세한 진행 상황은 `STATUS.md` 참고.
+실제 아트/사운드 에셋 연결(현재 색상·이모지 플레이스홀더), 제스처 조작(§8.2),
+튜토리얼(§28), 광고 SDK 실연동(§18.4), Android 실기기 QA(§30). 자세한 진행 상황은 `STATUS.md` 참고.
 
 ## 알려진 한계
 

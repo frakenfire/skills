@@ -2,7 +2,7 @@ import 'package:ppyong_ppyong_blockpop/core/game_engine.dart';
 import 'package:ppyong_ppyong_blockpop/core/models/piece.dart';
 import 'package:ppyong_ppyong_blockpop/core/states/game_state.dart';
 import 'package:ppyong_ppyong_blockpop/core/systems/character_reaction_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('게임 엔진 통합 (PRD §5.1, §25)', () {

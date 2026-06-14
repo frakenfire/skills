@@ -1,5 +1,5 @@
 import 'package:ppyong_ppyong_blockpop/core/systems/fever_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('피버 (PRD §14 / §31.7)', () {

@@ -1,5 +1,5 @@
 import 'package:ppyong_ppyong_blockpop/core/systems/character_reaction_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('캐릭터 리액션 (PRD §15 / §31.8)', () {

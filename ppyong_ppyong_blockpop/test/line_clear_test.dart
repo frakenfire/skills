@@ -1,7 +1,7 @@
 import 'package:ppyong_ppyong_blockpop/core/models/board.dart';
 import 'package:ppyong_ppyong_blockpop/core/models/piece.dart';
 import 'package:ppyong_ppyong_blockpop/core/systems/line_clear_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void _fillRow(Board b, int y) {
   for (var x = 0; x < b.width; x++) {

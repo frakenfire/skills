@@ -1,6 +1,6 @@
 import 'package:ppyong_ppyong_blockpop/core/models/piece.dart';
 import 'package:ppyong_ppyong_blockpop/core/systems/bag_randomizer.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('7-bag (PRD §7.2, §7.3)', () {

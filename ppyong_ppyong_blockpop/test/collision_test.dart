@@ -1,7 +1,7 @@
 import 'package:ppyong_ppyong_blockpop/core/models/board.dart';
 import 'package:ppyong_ppyong_blockpop/core/models/piece.dart';
 import 'package:ppyong_ppyong_blockpop/core/systems/collision_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('충돌 (PRD §7.6 / §31.2)', () {

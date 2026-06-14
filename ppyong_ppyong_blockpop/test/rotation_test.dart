@@ -1,7 +1,7 @@
 import 'package:ppyong_ppyong_blockpop/core/models/board.dart';
 import 'package:ppyong_ppyong_blockpop/core/models/piece.dart';
 import 'package:ppyong_ppyong_blockpop/core/systems/rotation_system.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('회전 (PRD §9 / §31.3)', () {
