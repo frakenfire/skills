@@ -37,7 +37,7 @@ export default function PredictView({ stocks, onOpenStock, onRequirePro, onShare
         </button>
       )}
 
-      <p className="disclaimer">기술적 지표 기반의 정보 제공이며, 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다.</p>
+      <p className="disclaimer">지표 기반 참고 정보예요.</p>
     </div>
   )
 }

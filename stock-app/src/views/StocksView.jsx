@@ -87,8 +87,6 @@ export default function StocksView({
                     onAddAlert={onAddAlert}
                     onRemoveAlert={onRemoveAlert}
                   />
-
-                  <p className="mini-disc">기술적 지표 기반 정보 제공이며, 투자 권유가 아닙니다.</p>
                 </div>
               )}
             </div>

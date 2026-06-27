@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useSubscription } from '../monetization/SubscriptionContext.jsx'
 import { topPick, marketMood, predict, formatKRW, formatPct } from '../data/market.js'
+import { fetchInsight } from '../data/source.js'
 import { TIPS } from '../data/education.js'
 import PredictionRow from '../components/PredictionRow.jsx'
 import Verdict from '../components/Verdict.jsx'
@@ -12,6 +14,16 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
   const mood = marketMood(stocks)
   const p = predict(pick.stock)
   const watchStocks = stocks.filter((s) => watchlist.includes(s.symbol))
+
+  // AI(Gemini) 한 줄 코멘트 — 키가 있을 때만 기본 문구를 대체
+  const [aiLine, setAiLine] = useState(null)
+  useEffect(() => {
+    let alive = true
+    setAiLine(null)
+    fetchInsight(pick.stock.symbol).then((t) => { if (alive) setAiLine(t) })
+    return () => { alive = false }
+  }, [pick.stock.symbol])
+  const pickView = aiLine ? { ...p, kidLine: aiLine } : p
 
   return (
     <div className="view">
@@ -48,7 +60,7 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
           <span className={pick.stock.change >= 0 ? 'c-up' : 'c-down'}> {formatPct(pick.stock.changePct)}</span>
         </div>
 
-        <Verdict p={p} />
+        <Verdict p={pickView} />
 
         <div className="now-status">지금 흐름 · <b>{p.status}</b></div>
         <button className="btn-toss btn-sm" onClick={() => onOpenStock(pick.stock)}>자세히 보기</button>

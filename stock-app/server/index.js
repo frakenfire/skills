@@ -7,6 +7,7 @@
 import http from 'node:http'
 import { getProvider } from './providers/index.js'
 import { createCheckout } from './payments.js'
+import { insight } from './ai.js'
 
 // .env가 있으면 로드(없어도 무방). Node 22의 내장 로더 사용.
 try { process.loadEnvFile?.('.env') } catch { /* .env 없음 → 기본값 사용 */ }
@@ -54,6 +55,19 @@ const server = http.createServer(async (req, res) => {
       }
     })
     return
+  }
+
+  // AI 한 줄 코멘트(Gemini). 키 없으면 text:null → 프론트 기본 문구 사용.
+  if (req.url.startsWith('/api/insight')) {
+    try {
+      const symbol = new URL(req.url, 'http://localhost').searchParams.get('symbol')
+      const stocks = await cached('quotes', () => provider.getQuotes())
+      const s = stocks.find((x) => x.symbol === symbol)
+      const text = s ? await insight(s) : null
+      return send(res, 200, { text })
+    } catch {
+      return send(res, 200, { text: null })
+    }
   }
 
   if (req.url.startsWith('/api/quotes')) {

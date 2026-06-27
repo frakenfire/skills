@@ -69,15 +69,15 @@ export function analyze(series) {
   if (score >= 62) {
     tone = 'buy'; label = '강세'
     headline = '안정적인 흐름이에요'
-    kidLine = '지표가 안정적인 편이에요. 투자 판단은 직접 하세요.'
+    kidLine = '지표가 좋은 편이에요.'
   } else if (score <= 40) {
     tone = 'sell'; label = '약세'
-    headline = '힘이 빠지는 흐름이에요'
-    kidLine = '지표가 약해지는 구간이에요. 신중하게 살펴보세요.'
+    headline = '힘이 빠지고 있어요'
+    kidLine = '지표가 약해지고 있어요.'
   } else {
     tone = 'hold'; label = '중립'
-    headline = '방향이 뚜렷하지 않아요'
-    kidLine = '아직 애매한 구간이에요. 조금 더 지켜보세요.'
+    headline = '방향을 보는 중이에요'
+    kidLine = '아직 방향이 또렷하지 않아요.'
   }
 
   let status

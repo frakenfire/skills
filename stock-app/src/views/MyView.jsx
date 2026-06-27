@@ -78,7 +78,7 @@ export default function MyView({ alerts = [], onRemoveAlert, onRequirePro }) {
         ))}
       </div>
 
-      <p className="disclaimer">본 앱의 신호·분석은 기술적 지표 기반 정보 제공이며, 투자 권유가 아닙니다.</p>
+      <p className="disclaimer">StockPulse의 신호는 기술적 지표 기반 참고 정보이며, 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다.</p>
     </div>
   )
 }

@@ -20,3 +20,17 @@ export async function loadStocks(tick = 0) {
     return snapshotAll(tick)
   }
 }
+
+// AI 한 줄 코멘트(Gemini). 백엔드+키가 있을 때만. 없으면 null → 기본 문구 사용.
+export async function fetchInsight(symbol) {
+  if (!USE_API) return null
+  try {
+    const opts = AbortSignal.timeout ? { signal: AbortSignal.timeout(8000) } : {}
+    const res = await fetch(`/api/insight?symbol=${encodeURIComponent(symbol)}`, opts)
+    if (!res.ok) return null
+    const data = await res.json()
+    return data?.text || null
+  } catch {
+    return null
+  }
+}
