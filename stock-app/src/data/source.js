@@ -3,7 +3,11 @@
 // → 백엔드가 없어도 앱은 항상 동작한다.
 import { snapshotAll } from './market.js'
 
+// 백엔드 프록시 사용 여부(빌드 시 주입). 정적 데모(Pages)에선 off → 시뮬레이션만 사용.
+const USE_API = import.meta.env.VITE_API === '1'
+
 export async function loadStocks(tick = 0) {
+  if (!USE_API) return snapshotAll(tick) // 백엔드 없이 동작(데모)
   try {
     const opts = AbortSignal.timeout ? { signal: AbortSignal.timeout(4000) } : {}
     const res = await fetch('/api/quotes', opts)

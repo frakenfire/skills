@@ -27,15 +27,14 @@ export default function PaywallModal({ open, onClose, reason }) {
         {done ? (
           <div className="pay-success">
             <div className="pay-check">✓</div>
-            <h2>Pro 시작! 🎉</h2>
-            <p>모든 AI 예측이 열렸어요.</p>
+            <h2>Pro 시작</h2>
+            <p>모든 기능이 열렸어요.</p>
           </div>
         ) : (
           <>
-            <div className="pay-emoji">🔓</div>
-            <h2 className="sheet-title">{reason || 'Pro로 전체 예측 보기'}</h2>
+            <h2 className="sheet-title">{reason || 'Pro로 전체 기능 열기'}</h2>
             <p className="sheet-sub">
-              모든 종목의 매수·매도 신호를 월 <strong>{plans.pro.priceLabel}</strong>에. 언제든 해지 가능해요.
+              전 종목 신호와 가격 알림을 월 <strong>{plans.pro.priceLabel}</strong>에. 언제든 해지 가능해요.
             </p>
 
             <ul className="pay-features">

@@ -1,9 +1,10 @@
-// 토스풍 하단 탭 네비게이션
+import Icon from './Icon.jsx'
+
 const TABS = [
-  { id: 'home', icon: '🏠', label: '홈' },
-  { id: 'predict', icon: '🤖', label: 'AI예측' },
-  { id: 'stocks', icon: '📊', label: '종목' },
-  { id: 'my', icon: '👤', label: 'MY' },
+  { id: 'home', icon: 'home', label: '홈' },
+  { id: 'predict', icon: 'signal', label: '신호' },
+  { id: 'stocks', icon: 'chart', label: '종목' },
+  { id: 'my', icon: 'user', label: 'MY' },
 ]
 
 export default function BottomNav({ tab, onChange }) {
@@ -15,7 +16,7 @@ export default function BottomNav({ tab, onChange }) {
           className={`navbtn ${tab === t.id ? 'active' : ''}`}
           onClick={() => onChange(t.id)}
         >
-          <span className="navicon">{t.icon}</span>
+          <Icon name={t.icon} size={22} stroke={tab === t.id ? 2.1 : 1.8} />
           <span className="navlabel">{t.label}</span>
         </button>
       ))}

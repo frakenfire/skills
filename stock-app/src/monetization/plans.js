@@ -36,11 +36,11 @@ export const PLANS = {
 
 // Pro에서만 열리는 기능들의 사람이 읽을 라벨 (페이월/가격표에서 사용)
 export const PRO_FEATURE_LABELS = [
-  { key: 'realtimeAlerts', label: '실시간 가격 알림' },
-  { key: 'deepChart', label: '상세 차트 · 기술적 지표' },
-  { key: 'aiInsight', label: 'AI 종목 분석 리포트' },
+  { key: 'realtimeAlerts', label: '목표가 가격 알림' },
+  { key: 'deepChart', label: '상세 차트 · 이동평균' },
+  { key: 'aiInsight', label: '전 종목 신호 · 백테스트' },
   { key: 'watchlist', label: '관심종목 무제한 (무료는 3개)' },
-  { key: 'adFree', label: '광고 · 업셀 배너 제거' },
+  { key: 'adFree', label: '업셀 배너 제거' },
   { key: 'exportCsv', label: '데이터 CSV 내보내기' },
 ]
 

@@ -3,8 +3,9 @@ import { topPick, marketMood, predict, formatKRW, formatPct } from '../data/mark
 import { TIPS } from '../data/education.js'
 import PredictionRow from '../components/PredictionRow.jsx'
 import Verdict from '../components/Verdict.jsx'
+import Icon from '../components/Icon.jsx'
 
-// 홈: 인사 → 시장 한눈에 → 오늘의 AI 추천 → 관심종목 → 초보 팁
+// 홈: 인사 → 시장 한눈에 → 오늘 눈여겨볼 종목 → 관심종목 → 한 줄 공부
 export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRequirePro, goTab }) {
   const { isPro } = useSubscription()
   const pick = topPick(stocks)
@@ -15,8 +16,8 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
   return (
     <div className="view">
       <div className="hello">
-        <p className="hello-sub">안녕하세요 👋</p>
-        <h1 className="hello-title">오늘도 차근차근,<br />초보를 위한 주식</h1>
+        <p className="hello-sub">오늘도 차근차근</p>
+        <h1 className="hello-title">초보를 위한 주식</h1>
       </div>
 
       {/* 시장 한눈에 */}
@@ -33,11 +34,13 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
         </div>
       </div>
 
-      {/* 오늘의 AI 추천 (핵심) */}
+      {/* 오늘 눈여겨볼 종목 */}
       <div className="card pick-card">
         <div className="pick-top">
-          <span className="pick-tag">🤖 오늘의 AI 추천</span>
-          <button className="share-mini" onClick={() => onShare(pick)}>공유</button>
+          <span className="pick-tag">오늘 눈여겨볼 종목</span>
+          <button className="share-mini" onClick={() => onShare(pick)}>
+            <Icon name="share" size={14} /> 공유
+          </button>
         </div>
         <div className="pick-name">{pick.stock.name}</div>
         <div className="pick-price">
@@ -47,18 +50,18 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
 
         <Verdict p={p} />
 
-        <div className="now-status">지금 이 주식은? <b>{p.status}</b></div>
+        <div className="now-status">지금 흐름 · <b>{p.status}</b></div>
         <button className="btn-toss btn-sm" onClick={() => onOpenStock(pick.stock)}>자세히 보기</button>
       </div>
 
       {/* 관심종목 */}
       <div className="section-head">
         <h2>관심종목</h2>
-        <button className="link" onClick={() => goTab('stocks')}>전체 →</button>
+        <button className="link" onClick={() => goTab('stocks')}>전체</button>
       </div>
       <div className="card list-card">
         {watchStocks.length === 0 ? (
-          <p className="empty-line">★ 를 눌러 관심종목을 담아보세요.</p>
+          <p className="empty-line">종목 화면에서 별표를 눌러 담아보세요.</p>
         ) : (
           watchStocks.map((s, i) => (
             <PredictionRow
@@ -66,19 +69,18 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
               stock={s}
               locked={!isPro && i >= 1}
               onClick={onOpenStock}
-              onLockedClick={() => onRequirePro('관심종목 AI 신호는 Pro에서 전부 보여요')}
+              onLockedClick={() => onRequirePro('관심종목 신호는 Pro에서 전부 보여요')}
             />
           ))
         )}
       </div>
 
-      {/* 초보 팁 */}
+      {/* 한 줄 공부 */}
       <div className="section-head">
         <h2>오늘의 한 줄 공부</h2>
-        <button className="link" onClick={() => goTab('my')}>더보기 →</button>
+        <button className="link" onClick={() => goTab('my')}>더보기</button>
       </div>
       <div className="card tip-card" onClick={() => goTab('my')}>
-        <span className="tip-emoji">{TIPS[0].emoji}</span>
         <div>
           <div className="tip-title">{TIPS[0].title}</div>
           <div className="tip-body">{TIPS[0].body}</div>

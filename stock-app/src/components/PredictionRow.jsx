@@ -21,13 +21,12 @@ export default function PredictionRow({ stock, locked, onClick, onLockedClick })
 
       {locked ? (
         <div className="signal locked-signal">
-          <span className="signal-pill blur">매수 92%</span>
-          <span className="lock-mini">🔒</span>
+          <span className="signal-pill blur">강세 92</span>
         </div>
       ) : (
         <div className="signal">
-          <span className={`signal-pill s-${p.tone}`}>{p.emoji} {p.signal}</span>
-          <span className="signal-conf">{p.confidence}%</span>
+          <span className={`signal-pill s-${p.tone}`}>{p.label}</span>
+          <span className="signal-conf">{p.strength}</span>
         </div>
       )}
     </button>
