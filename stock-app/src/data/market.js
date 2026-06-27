@@ -76,3 +76,73 @@ export const formatKRW = (n) =>
   new Intl.NumberFormat('ko-KR').format(Math.round(n)) + '원'
 
 export const formatPct = (n) => `${n >= 0 ? '+' : ''}${n.toFixed(2)}%`
+
+// ─────────────────────────────────────────────
+// AI 매수/매도/관망 예측 (이 앱의 핵심 후킹 기능)
+// 시뮬레이션 시계열의 모멘텀·변동성으로 결정적 신호를 만든다.
+// 실서비스에선 이 함수를 실제 모델/리서치 API로 교체한다.
+// ※ 데모이며 투자권유가 아님.
+// ─────────────────────────────────────────────
+function clamp(n, lo, hi) {
+  return Math.max(lo, Math.min(hi, n))
+}
+
+export function predict(stock) {
+  const s = stock.series
+  const recent = s.slice(-12)
+  const first = recent[0]
+  const last = recent[recent.length - 1]
+  const momentum = ((last - first) / first) * 100 // 최근 추세 %
+
+  // 변동성: 인접 변화율의 평균 절대값
+  let vol = 0
+  for (let i = 1; i < recent.length; i++) {
+    vol += Math.abs((recent[i] - recent[i - 1]) / recent[i - 1])
+  }
+  vol = (vol / (recent.length - 1)) * 100
+
+  let signal, tone, emoji, reason
+  if (momentum > 1.0) {
+    signal = '매수'
+    tone = 'buy'
+    emoji = '📈'
+    reason = `최근 흐름이 ${formatPct(momentum)}로 우상향이에요. 상승 분위기가 이어질 가능성이 있어요.`
+  } else if (momentum < -1.0) {
+    signal = '매도'
+    tone = 'sell'
+    emoji = '📉'
+    reason = `최근 흐름이 ${formatPct(momentum)}로 약해요. 지금은 쉬어가는 걸 고려해 보세요.`
+  } else {
+    signal = '관망'
+    tone = 'hold'
+    emoji = '⏸️'
+    reason = '뚜렷한 방향이 없어요. 조금 더 지켜본 뒤 판단하는 게 안전해요.'
+  }
+
+  // 신뢰도: 모멘텀이 강하고 변동성이 낮을수록 높게
+  const confidence = Math.round(
+    clamp(58 + Math.abs(momentum) * 7 - vol * 2, 52, 93),
+  )
+
+  return { signal, tone, emoji, reason, confidence, momentum }
+}
+
+// 오늘의 추천: 매수 신뢰도가 가장 높은 종목 하나
+export function topPick(stocks) {
+  const scored = stocks
+    .map((s) => ({ stock: s, p: predict(s) }))
+    .filter((x) => x.p.tone === 'buy')
+    .sort((a, b) => b.p.confidence - a.p.confidence)
+  return scored[0] || { stock: stocks[0], p: predict(stocks[0]) }
+}
+
+// 시장 요약(코스피처럼): 전 종목 평균 등락
+export function marketMood(stocks) {
+  const avg = stocks.reduce((a, s) => a + s.changePct, 0) / stocks.length
+  const up = stocks.filter((s) => s.change >= 0).length
+  let label, tone
+  if (avg > 0.3) { label = '강세'; tone = 'buy' }
+  else if (avg < -0.3) { label = '약세'; tone = 'sell' }
+  else { label = '보합'; tone = 'hold' }
+  return { avg, up, down: stocks.length - up, total: stocks.length, label, tone }
+}
