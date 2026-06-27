@@ -6,6 +6,7 @@
 // - provider 실패 시 시뮬레이션으로 폴백
 import http from 'node:http'
 import { getProvider } from './providers/index.js'
+import { createCheckout } from './payments.js'
 
 // .env가 있으면 로드(없어도 무방). Node 22의 내장 로더 사용.
 try { process.loadEnvFile?.('.env') } catch { /* .env 없음 → 기본값 사용 */ }
@@ -36,7 +37,23 @@ const server = http.createServer(async (req, res) => {
   if (!req.url.startsWith('/api/')) return send(res, 404, { error: 'not found' })
 
   if (req.url.startsWith('/api/health')) {
-    return send(res, 200, { ok: true, provider: provider.name })
+    return send(res, 200, { ok: true, provider: provider.name, payments: Boolean(process.env.STRIPE_SECRET_KEY) })
+  }
+
+  // 결제 세션 생성
+  if (req.method === 'POST' && req.url.startsWith('/api/checkout')) {
+    let body = ''
+    req.on('data', (c) => { body += c })
+    req.on('end', async () => {
+      try {
+        const { origin } = JSON.parse(body || '{}')
+        send(res, 200, await createCheckout(origin))
+      } catch (e) {
+        // 결제 실패 → 데모로 폴백(사용자가 막히지 않게)
+        send(res, 200, { demo: true, error: String(e.message || e) })
+      }
+    })
+    return
   }
 
   if (req.url.startsWith('/api/quotes')) {

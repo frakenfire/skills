@@ -2,6 +2,7 @@ import { useSubscription } from '../monetization/SubscriptionContext.jsx'
 import { topPick, marketMood, predict, formatKRW, formatPct } from '../data/market.js'
 import { TIPS } from '../data/education.js'
 import PredictionRow from '../components/PredictionRow.jsx'
+import Verdict from '../components/Verdict.jsx'
 
 // 홈: 인사 → 시장 한눈에 → 오늘의 AI 추천 → 관심종목 → 초보 팁
 export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRequirePro, goTab }) {
@@ -43,9 +44,10 @@ export default function HomeView({ stocks, watchlist, onOpenStock, onShare, onRe
           {formatKRW(pick.stock.price)}
           <span className={pick.stock.change >= 0 ? 'c-up' : 'c-down'}> {formatPct(pick.stock.changePct)}</span>
         </div>
-        <div className={`pick-signal s-${p.tone}`}>{p.emoji} {p.signal} · 신뢰도 {p.confidence}%</div>
-        <p className="pick-reason">{p.reason}</p>
-        <div className="conf-bar"><span style={{ width: `${p.confidence}%` }} className={`s-${p.tone}-bg`} /></div>
+
+        <Verdict p={p} />
+
+        <div className="now-status">지금 이 주식은? <b>{p.status}</b></div>
         <button className="btn-toss btn-sm" onClick={() => onOpenStock(pick.stock)}>자세히 보기</button>
       </div>
 

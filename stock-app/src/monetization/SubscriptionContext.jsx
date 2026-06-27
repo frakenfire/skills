@@ -28,10 +28,46 @@ export function SubscriptionProvider({ children }) {
     }
   }, [state])
 
-  // 가짜 결제 흐름. 실제로는 Stripe/IAP 결제 검증 후 서버 entitlement로 대체.
+  // Stripe 결제 후 success_url(?paid=1)로 돌아오면 Pro로 전환하고 URL을 정리한다.
+  // ※ MVP: 클라이언트 확인. 운영 시에는 Stripe 웹훅으로 서버 검증 권장(README 참고).
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('paid') === '1') {
+        setState({ tier: 'pro', since: new Date().toISOString() })
+      }
+      if (params.has('paid')) {
+        params.delete('paid')
+        const qs = params.toString()
+        window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
+      }
+    } catch { /* ignore */ }
+  }, [])
+
+  // 결제 시작: 서버에 Checkout 세션을 요청한다.
+  // - Stripe 키가 있으면 결제 페이지로 이동(실결제)
+  // - 없으면(데모) 즉시 Pro 업그레이드
+  const startCheckout = useCallback(async () => {
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ origin: window.location.origin }),
+      })
+      const data = await res.json()
+      if (data?.url) {
+        window.location.href = data.url // Stripe 결제 페이지로 이동
+        return { redirected: true }
+      }
+    } catch { /* 백엔드 없음 → 데모로 폴백 */ }
+    await new Promise((r) => setTimeout(r, 700))
+    setState({ tier: 'pro', since: new Date().toISOString() })
+    return { demo: true }
+  }, [])
+
+  // 데모 즉시 업그레이드(폴백/테스트용)
   const upgrade = useCallback(async () => {
-    // 결제 처리 지연을 흉내내어 UI의 로딩 상태를 검증할 수 있게 한다.
-    await new Promise((r) => setTimeout(r, 900))
+    await new Promise((r) => setTimeout(r, 700))
     setState({ tier: 'pro', since: new Date().toISOString() })
     return { ok: true }
   }, [])
@@ -48,10 +84,11 @@ export function SubscriptionProvider({ children }) {
       isPro: state.tier === 'pro',
       can: (featureKey) => canUse(state.tier, featureKey),
       plans: PLANS,
+      startCheckout,
       upgrade,
       cancel,
     }),
-    [state, upgrade, cancel],
+    [state, startCheckout, upgrade, cancel],
   )
 
   return <SubscriptionContext.Provider value={value}>{children}</SubscriptionContext.Provider>

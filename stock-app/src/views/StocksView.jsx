@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { predict, formatKRW, formatPct } from '../data/market.js'
 import { useSubscription } from '../monetization/SubscriptionContext.jsx'
 import Sparkline from '../components/Sparkline.jsx'
+import Verdict from '../components/Verdict.jsx'
 
 // 종목 탭: 검색 + 목록 + 상세(인라인 확장)
 export default function StocksView({ stocks, watchlist, onToggleWatch, onRequirePro, focus }) {
@@ -60,10 +61,11 @@ export default function StocksView({ stocks, watchlist, onToggleWatch, onRequire
 
               {expanded && (
                 <div className="stock-detail2">
-                  <div className={`detail-signal s-${p.tone}`}>
-                    {p.emoji} AI 신호: {p.signal} · 신뢰도 {p.confidence}%
-                  </div>
-                  <p className="detail-reason">{p.reason}</p>
+                  <Verdict p={p} />
+                  <div className="now-status">지금 이 주식은? <b>{p.status}</b></div>
+                  <ul className="reasons">
+                    {p.reasons.map((r, idx) => <li key={idx}>{r}</li>)}
+                  </ul>
 
                   <div className="kv2">
                     <div><span>전일종가</span><b>{formatKRW(s.prevClose)}</b></div>

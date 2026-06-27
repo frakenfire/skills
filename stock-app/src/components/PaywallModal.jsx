@@ -4,7 +4,7 @@ import { PRO_FEATURE_LABELS } from '../monetization/plans.js'
 
 // 수익화 전환 지점 (토스풍 바텀시트).
 export default function PaywallModal({ open, onClose, reason }) {
-  const { plans, upgrade } = useSubscription()
+  const { plans, startCheckout } = useSubscription()
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
@@ -12,12 +12,11 @@ export default function PaywallModal({ open, onClose, reason }) {
 
   const handleUpgrade = async () => {
     setLoading(true)
-    const res = await upgrade()
+    const res = await startCheckout()
+    if (res.redirected) return // Stripe 결제 페이지로 이동 중
     setLoading(false)
-    if (res.ok) {
-      setDone(true)
-      setTimeout(() => { setDone(false); onClose() }, 1100)
-    }
+    setDone(true) // 데모 결제 완료
+    setTimeout(() => { setDone(false); onClose() }, 1100)
   }
 
   return (

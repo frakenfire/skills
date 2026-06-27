@@ -33,15 +33,40 @@ freemium 구독입니다. 무료로 쓰다가 **Pro(월 9,900원)** 로 전환.
 
 **바이럴(홍보) 루프**: 홈/예측의 "공유"를 누르면 스레드에 올릴 **AI 예측 카드 + 해시태그 문구**가 만들어지고 클립보드에 복사됨(`#주식초보 #주식추천`). 공유 → 신규 유입 → 무료 사용 → Pro 전환.
 
+### 실제 결제 (Stripe) — 돈 받기
+
+`server/payments.js`가 Stripe Checkout 세션을 만듭니다. `.env`에 `STRIPE_SECRET_KEY`만 넣으면 **실결제**가 켜지고, 없으면 데모 업그레이드로 동작합니다(앱은 항상 작동).
+
+```
+[Pro 시작하기] → /api/checkout → Stripe 결제창 → 성공 시 ?paid=1 로 복귀 → Pro 활성화
+```
+
+- 키 발급: https://dashboard.stripe.com/apikeys → `STRIPE_SECRET_KEY=sk_live_...`
+- 가격: 기본 ₩9,900/월 자동 생성. 대시보드에서 만든 가격을 쓰려면 `STRIPE_PRICE_ID=price_...`
+- ⚠️ MVP는 복귀 시 클라이언트에서 Pro 처리합니다. **운영 시에는 Stripe 웹훅(checkout.session.completed)으로 서버 검증** 후 entitlement를 내려주도록 강화하세요(결제 위변조 방지).
+
+### 신호 엔진 (RSI + 이동평균)
+
+매수/매도/관망 신호는 장난감이 아니라 **공개 표준 기술적 지표**로 계산합니다 — `src/data/signals.js`.
+- **RSI(14)**: 과매도(<30)면 "쌀 수 있음", 과매수(>70)면 "조심"
+- **이동평균 크로스오버**: 단기(5) ≥ 장기(20) → 상승 추세
+- 둘을 0~100 점수로 합쳐 🟢/🟡/🔴 3단계 + 쉬운 말 근거로 변환
+- series만 실데이터로 바꾸면 동일 엔진이 그대로 동작 (참고: technicalindicators, debut-js/Indicators)
+
 ## 실행
 
 ```bash
 cd stock-app
 npm install
 npm run dev      # http://localhost:5173 (모바일 화면 폭에 최적화)
+npm run server   # (선택) 시세/결제 프록시 — 실 API/결제 쓸 때
 npm test         # 수익화 게이팅 단위 테스트
 npm run build    # 프로덕션 빌드
 ```
+
+## 배포 (GitHub Pages)
+
+`.github/workflows/deploy-pages.yml`가 푸시 시 자동으로 빌드→배포합니다. 정적 빌드는 백엔드 없이도 시뮬레이션으로 완전 동작하므로, 배포 링크만으로 전체 UX를 시연할 수 있습니다. (실 시세/결제는 백엔드 프록시를 띄우고 키를 넣을 때 활성화)
 
 ## 구조
 

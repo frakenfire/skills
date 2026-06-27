@@ -1,6 +1,7 @@
 // 시세 데이터 레이어.
 // 실제 서비스에서는 여기를 KRX/벤더 API 또는 자체 백엔드로 교체한다.
 // 데모에서는 시드 기반 의사난수로 "라이브처럼" 움직이는 가짜 시세를 만든다.
+import { analyze } from './signals.js'
 
 export const SEED_STOCKS = [
   { symbol: '005930', name: '삼성전자', sector: 'IT', base: 78600 },
@@ -78,53 +79,13 @@ export const formatKRW = (n) =>
 export const formatPct = (n) => `${n >= 0 ? '+' : ''}${n.toFixed(2)}%`
 
 // ─────────────────────────────────────────────
-// AI 매수/매도/관망 예측 (이 앱의 핵심 후킹 기능)
-// 시뮬레이션 시계열의 모멘텀·변동성으로 결정적 신호를 만든다.
-// 실서비스에선 이 함수를 실제 모델/리서치 API로 교체한다.
-// ※ 데모이며 투자권유가 아님.
+// 매수/매도/관망 신호 (이 앱의 핵심 기능)
+// 실제 기술적 지표(RSI 14 + 이동평균 크로스오버)로 신호를 만든다 → signals.js
+// 실서비스에선 series를 실데이터로 바꾸면 동일 엔진이 그대로 동작한다.
+// ※ 참고용이며 투자권유가 아님.
 // ─────────────────────────────────────────────
-function clamp(n, lo, hi) {
-  return Math.max(lo, Math.min(hi, n))
-}
-
 export function predict(stock) {
-  const s = stock.series
-  const recent = s.slice(-12)
-  const first = recent[0]
-  const last = recent[recent.length - 1]
-  const momentum = ((last - first) / first) * 100 // 최근 추세 %
-
-  // 변동성: 인접 변화율의 평균 절대값
-  let vol = 0
-  for (let i = 1; i < recent.length; i++) {
-    vol += Math.abs((recent[i] - recent[i - 1]) / recent[i - 1])
-  }
-  vol = (vol / (recent.length - 1)) * 100
-
-  let signal, tone, emoji, reason
-  if (momentum > 1.0) {
-    signal = '매수'
-    tone = 'buy'
-    emoji = '📈'
-    reason = `최근 흐름이 ${formatPct(momentum)}로 우상향이에요. 상승 분위기가 이어질 가능성이 있어요.`
-  } else if (momentum < -1.0) {
-    signal = '매도'
-    tone = 'sell'
-    emoji = '📉'
-    reason = `최근 흐름이 ${formatPct(momentum)}로 약해요. 지금은 쉬어가는 걸 고려해 보세요.`
-  } else {
-    signal = '관망'
-    tone = 'hold'
-    emoji = '⏸️'
-    reason = '뚜렷한 방향이 없어요. 조금 더 지켜본 뒤 판단하는 게 안전해요.'
-  }
-
-  // 신뢰도: 모멘텀이 강하고 변동성이 낮을수록 높게
-  const confidence = Math.round(
-    clamp(58 + Math.abs(momentum) * 7 - vol * 2, 52, 93),
-  )
-
-  return { signal, tone, emoji, reason, confidence, momentum }
+  return analyze(stock.series)
 }
 
 // 오늘의 추천: 매수 신뢰도가 가장 높은 종목 하나

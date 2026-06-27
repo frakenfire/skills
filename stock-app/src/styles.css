@@ -215,3 +215,30 @@ body {
 .share-card-conf { font-size: 14px; opacity: .92; margin-top: 4px; }
 .share-card-brand { font-size: 12px; opacity: .8; margin-top: 16px; }
 .share-text { background: #f7f8fa; border-radius: 12px; padding: 14px; font-size: 13px; color: var(--text2); white-space: pre-wrap; line-height: 1.6; margin-bottom: 12px; }
+
+/* 신호등 판정 카드 (초보·어린이용) */
+.verdict { display: flex; align-items: center; gap: 14px; border-radius: 16px; padding: 16px; margin: 14px 0 10px; }
+.verdict.compact { padding: 12px; margin: 8px 0; }
+.vbg-buy { background: #e4f9f0; }
+.vbg-hold { background: #fff5e0; }
+.vbg-sell { background: #fdeaec; }
+.verdict-light { font-size: 34px; line-height: 1; }
+.verdict.compact .verdict-light { font-size: 26px; }
+.verdict-main { flex: 1; min-width: 0; }
+.verdict-headline { font-size: 19px; font-weight: 800; letter-spacing: -0.3px; }
+.vbg-buy .verdict-headline { color: #0a9d63; }
+.vbg-hold .verdict-headline { color: #c98a00; }
+.vbg-sell .verdict-headline { color: #d63341; }
+.verdict-kid { font-size: 13.5px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+.verdict-score { text-align: center; background: rgba(255,255,255,.7); border-radius: 12px; padding: 8px 12px; min-width: 56px; }
+.vs-num { font-size: 22px; font-weight: 800; }
+.vbg-buy .vs-num { color: #0a9d63; }
+.vbg-hold .vs-num { color: #c98a00; }
+.vbg-sell .vs-num { color: #d63341; }
+.vs-label { font-size: 11px; color: var(--muted); }
+
+.now-status { font-size: 14px; color: var(--text2); padding: 2px 2px 0; }
+.now-status b { color: var(--text); font-weight: 700; }
+
+.reasons { margin: 10px 0 14px; padding-left: 18px; }
+.reasons li { font-size: 13.5px; color: var(--text2); line-height: 1.7; }
