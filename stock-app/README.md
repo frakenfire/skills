@@ -63,6 +63,49 @@ src/
 - [뱅크샐러드 — 초보 주식 하는 법](https://www.banksalad.com/articles/%EC%99%95%EC%B4%88%EB%B3%B4%EA%B0%80-%EC%A3%BC%EC%8B%9D%ED%88%AC%EC%9E%90%EB%A5%BC-%EC%8B%9C%EC%9E%91%ED%95%98%EB%8A%94-%EB%B2%95)
 - [패스트캠퍼스 — 주식 입문 공부법 TOP4](https://fastcampus.co.kr/story_article_investtop4)
 
+## 실제 시세 API 연결 (국내 + 해외)
+
+키 노출·CORS 때문에 **백엔드 프록시**(`server/index.js`)를 두고, 프론트는 `/api/quotes`만 호출합니다. 키가 없으면 **시뮬레이션으로 자동 폴백**하므로 앱은 항상 동작합니다.
+
+```
+프론트(market 화면) → /api/quotes → 프록시(server) → provider(KIS/TwelveData/sim) → 실제 시세
+```
+
+### 실행 (2개 터미널)
+
+```bash
+# 터미널 A — 시세 프록시
+cp .env.example .env          # 쓰려는 provider 키만 채우기
+npm run server                # http://localhost:8787
+
+# 터미널 B — 프론트 (개발 중 /api 를 8787로 프록시)
+npm run dev                   # http://localhost:5173
+```
+
+키 없이 `npm run dev`만 켜도 동작합니다(시뮬레이션 폴백).
+
+### provider 선택 (`.env`의 `DATA_PROVIDER`)
+
+| 값 | 설명 | 국내 | 해외 | 필요한 것 |
+|---|---|:--:|:--:|---|
+| `sim` (기본) | 시뮬레이션 데이터 | – | – | 없음 |
+| `twelvedata` | Twelve Data API | ✅ | ✅ | 무료 API 키 |
+| `kis` | 한국투자증권 KIS | ✅ | ✅ | 증권계좌 + 앱키 (스캐폴드, TODO 채우면 동작) |
+
+- **Twelve Data**: [twelvedata.com](https://twelvedata.com) 가입 → `TWELVEDATA_API_KEY` 설정 → `DATA_PROVIDER=twelvedata`. KRX(`005930:KRX`)와 미국(`AAPL`) 모두 지원. (무료 800req/일)
+- **KIS**: [apiportal.koreainvestment.com](https://apiportal.koreainvestment.com)에서 앱 등록 → `KIS_APP_KEY/KIS_APP_SECRET`. 국내+해외 실시간. `server/providers/kis.js`에 토큰·현재가 호출 흐름이 주석으로 잡혀 있고 TODO만 채우면 됩니다.
+
+### 다른 provider 추가하기
+
+`server/providers/<name>.js`에 `export const name`과 `export async function getQuotes()`(앱 데이터 모양의 배열 반환)만 구현하고 `server/providers/index.js`에 등록하면 끝. 화면 코드는 손댈 필요 없습니다.
+
+**데이터 모양** (provider가 맞춰야 할 형식):
+```js
+{ symbol, name, sector, price, prevClose, change, changePct, series:[...48], volume }
+```
+
+> ⚠️ KRX 실시간 시세를 외부에 보여주려면 **KRX/KOSCOM 시세 재배포 라이선스**가 필요할 수 있습니다. KIS 같은 정식 API는 약관 범위 내 사용이 전제입니다.
+
 ## 실서비스 전환 포인트
 
 - **시세**: 지금은 시뮬레이션. `data/market.js`를 실데이터로 교체 시 **KRX/KOSCOM 시세 재배포 라이선스** 확인 필요.

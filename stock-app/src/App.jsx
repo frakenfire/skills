@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { snapshotAll, topPick } from './data/market.js'
+import { loadStocks } from './data/source.js'
 import { useSubscription } from './monetization/SubscriptionContext.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import PaywallModal from './components/PaywallModal.jsx'
@@ -29,17 +30,25 @@ export default function App() {
   const [paywall, setPaywall] = useState({ open: false, reason: '' })
   const [share, setShare] = useState({ open: false, pick: null })
 
+  // 초기엔 시뮬레이션으로 즉시 렌더(빈 화면 방지), 이후 프록시에서 갱신
+  const [stocks, setStocks] = useState(() => snapshotAll(0))
+
   // "라이브" 시세: 5초마다 갱신
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), 5000)
     return () => clearInterval(id)
   }, [])
 
+  // tick이 바뀔 때마다 프록시(/api/quotes)에서 시세를 받아온다. 실패 시 시뮬레이션 폴백.
+  useEffect(() => {
+    let alive = true
+    loadStocks(tick).then((s) => { if (alive) setStocks(s) }).catch(() => {})
+    return () => { alive = false }
+  }, [tick])
+
   useEffect(() => {
     try { localStorage.setItem(WATCH_KEY, JSON.stringify(watchlist)) } catch { /* ignore */ }
   }, [watchlist])
-
-  const stocks = useMemo(() => snapshotAll(tick), [tick])
 
   const requirePro = (reason) => setPaywall({ open: true, reason })
   const openShare = (pick) => setShare({ open: true, pick: pick || topPick(stocks) })
