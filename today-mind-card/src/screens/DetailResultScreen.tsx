@@ -1,7 +1,7 @@
 import { AppLayout } from '../components/AppLayout';
 import { ReadingCard } from '../components/ReadingCard';
+import { CardArtHero } from '../components/CardArtHero';
 import { Disclaimer } from '../components/Disclaimer';
-import { cardEmoji } from '../data/cards';
 import type { Card, ReadingResult } from '../types/reading';
 
 type Props = {
@@ -27,7 +27,7 @@ export function DetailResultScreen({
       <span className="eyebrow">{card.name} · {card.keyword}</span>
 
       <ReadingCard
-        emoji={cardEmoji(card.id)}
+        hero={<CardArtHero card={card} />}
         sections={[
           { label: '지금 마음', text: reading.currentMind },
           { label: '오늘의 흐름', text: reading.flow },

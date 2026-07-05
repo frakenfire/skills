@@ -444,6 +444,41 @@ button {
   margin-bottom: var(--space-5);
 }
 
+/* ── 컨셉 이미지 (무드보드) ── */
+.hero-img {
+  width: min(62vw, 220px);
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-5);
+}
+
+.reading--centered {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reading__art {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-4);
+}
+
+.reading__hero {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
 @media (max-width: 360px) {
   .h1 {
     font-size: 23px;

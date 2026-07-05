@@ -1,7 +1,7 @@
 import { AppLayout } from '../components/AppLayout';
 import { Disclaimer } from '../components/Disclaimer';
 import { AdBadge, AdBanner } from '../components/AdNotice';
-import { cardEmoji } from '../data/cards';
+import { CardArtHero } from '../components/CardArtHero';
 import type { Card, ReadingResult } from '../types/reading';
 
 type Props = {
@@ -30,10 +30,8 @@ export function ResultScreen({
 }: Props) {
   return (
     <AppLayout onBack={onBack} title="오늘의 결과">
-      <div className="reading fade-in">
-        <div className="reading__hero-emoji" aria-hidden>
-          {cardEmoji(card.id)}
-        </div>
+      <div className="reading reading--centered fade-in">
+        <CardArtHero card={card} />
         <p className="reading__summary">{reading.summaryLines.join('\n')}</p>
       </div>
 

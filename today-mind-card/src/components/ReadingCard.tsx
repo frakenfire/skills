@@ -1,22 +1,20 @@
+import type { ReactNode } from 'react';
+
 type Section = {
   label: string;
   text: string;
 };
 
 type Props = {
-  emoji?: string;
+  hero?: ReactNode;
   sections: Section[];
 };
 
 // PRD §8.7 — 상세 결과 섹션 카드
-export function ReadingCard({ emoji, sections }: Props) {
+export function ReadingCard({ hero, sections }: Props) {
   return (
     <div className="reading fade-in">
-      {emoji ? (
-        <div className="reading__hero-emoji" aria-hidden>
-          {emoji}
-        </div>
-      ) : null}
+      {hero ? <div className="reading__hero">{hero}</div> : null}
       {sections.map((s) => (
         <div className="reading__section" key={s.label}>
           <p className="reading__label">{s.label}</p>
