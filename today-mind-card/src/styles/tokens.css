@@ -1,0 +1,36 @@
+/* PRD §6.5 — 디자인 토큰
+   내부 FRONT-END COLOR SYSTEM GUIDE 기준.
+   SIGNATURE GREEN #114e48 를 CTA·핵심 액션·선택 상태에 우선 적용한다. */
+:root {
+  --color-white: #ffffff;
+  --color-dark-gray: #333333;
+  --color-signature-green: #114e48;
+  --color-signature-green-strong: #0d3d38;
+  --color-signature-orange: #ff4b00;
+  --color-surface: #f7faf8;
+  --color-soft-green: #e9f3f1;
+  --color-soft-orange: #fff1e8;
+  --color-border: #e5e8eb;
+  --color-text-secondary: #6b7280;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --shadow-card: 0 6px 24px rgba(17, 78, 72, 0.08);
+  --shadow-cta: 0 4px 16px rgba(17, 78, 72, 0.24);
+
+  --font-body:
+    -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard',
+    'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+
+  --max-width: 430px;
+}
