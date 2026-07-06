@@ -1,21 +1,40 @@
-/* PRD §6.5 — 디자인 토큰
-   내부 FRONT-END COLOR SYSTEM GUIDE 기준.
-   SIGNATURE GREEN #114e48 를 CTA·핵심 액션·선택 상태에 우선 적용한다. */
+/* 디자인 토큰 — 토스 TDS 스타일 뉴트럴 시스템 + 브랜드 그린.
+   내부 컬러 가이드: SIGNATURE GREEN #114e48 = CTA·핵심 액션·선택 상태.
+   폰트: Pretendard(제품용 한글 UI 폰트). */
 :root {
-  --color-white: #ffffff;
-  --color-dark-gray: #333333;
-  --color-signature-green: #114e48;
-  --color-signature-green-strong: #0d3d38;
-  --color-signature-orange: #ff4b00;
-  --color-surface: #f7faf8;
-  --color-soft-green: #e9f3f1;
-  --color-soft-orange: #fff1e8;
-  --color-border: #e5e8eb;
-  --color-text-secondary: #6b7280;
+  /* Toss grayscale ramp */
+  --gray-900: #191f28;
+  --gray-800: #333d4b;
+  --gray-700: #4e5968;
+  --gray-600: #6b7684;
+  --gray-500: #8b95a1;
+  --gray-400: #b0b8c1;
+  --gray-300: #d1d6db;
+  --gray-200: #e5e8eb;
+  --gray-100: #f2f4f6;
+  --gray-50: #f9fafb;
+  --white: #ffffff;
 
-  --radius-sm: 10px;
+  --brand: #114e48; /* SIGNATURE GREEN */
+  --brand-strong: #0d3d38;
+  --brand-soft: #e7f1ef;
+  --orange: #ff4b00; /* SIGNATURE ORANGE */
+
+  /* 기존 클래스 호환 별칭 */
+  --color-white: var(--white);
+  --color-dark-gray: var(--gray-900);
+  --color-signature-green: var(--brand);
+  --color-signature-green-strong: var(--brand-strong);
+  --color-signature-orange: var(--orange);
+  --color-surface: var(--gray-50);
+  --color-soft-green: var(--brand-soft);
+  --color-soft-orange: #fff1e8;
+  --color-border: var(--gray-200);
+  --color-text-secondary: var(--gray-600);
+
+  --radius-sm: 12px;
   --radius-md: 16px;
-  --radius-lg: 22px;
+  --radius-lg: 20px;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -25,12 +44,12 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  --shadow-card: 0 6px 24px rgba(17, 78, 72, 0.08);
-  --shadow-cta: 0 4px 16px rgba(17, 78, 72, 0.24);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-cta: 0 6px 16px rgba(17, 78, 72, 0.2);
 
   --font-body:
-    -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard',
-    'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
 
   --max-width: 430px;
 }

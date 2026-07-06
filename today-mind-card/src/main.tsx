@@ -1,6 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+// Pretendard — 제품용 한글 UI 폰트 (다이나믹 서브셋, self-host, CSP 안전)
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './styles/globals.css';
 
 const rootEl = document.getElementById('root');

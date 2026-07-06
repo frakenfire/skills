@@ -15,6 +15,12 @@
 - **광고는 mock** — 실제 SDK 연동 전까지 `Promise<boolean>` mock (`src/lib/ads.ts`)
 - **디자인** — Primary `#114e48`(SIGNATURE GREEN), 보조 강조 `#ff4b00`, 375px 기준·360~430px 대응
 
+## 폰트 · 디자인 시스템
+
+- **Pretendard self-host**(다이나믹 서브셋, CSP 안전) — 시스템 폰트 폴백 깨짐 제거
+- **토스 TDS 뉴트럴 시스템** — 화이트/그레이 캔버스 + 차콜 헤딩(`#191f28`) + 토스 그레이 램프,
+  Primary는 브랜드 `#114e48` 유지. 자매 앱 `tomorrow-note`와 동일한 토큰 체계로 통일.
+
 ## 화면 흐름 (PRD §7.1)
 
 ```

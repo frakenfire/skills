@@ -19,7 +19,10 @@ body {
   color: var(--color-dark-gray);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
 }
 
 button {
