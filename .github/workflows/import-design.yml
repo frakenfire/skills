@@ -1,0 +1,30 @@
+name: Import Design Skill
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  import:
+    if: github.event.pull_request.title == 'RUN_DESIGN_IMPORT'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Copy exact upstream design skill
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p design
+          curl -L --fail 'https://raw.githubusercontent.com/Leonxlnx/taste-skill/b17742737e796305d829b3ad39eda3add0d79060/skills/taste-skill/SKILL.md' -o design/SKILL.md
+          test "$(git hash-object design/SKILL.md)" = 'b72132fcd466da605623ffe96e370b3991fc5285'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add design/SKILL.md
+          git commit -m 'Add Design skill from upstream'
+          git push origin master
