@@ -1,0 +1,24 @@
+name: Import Ponytail and Design Skills
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-ponytail-design.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Copy original skill files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ponytail design
+          curl -L --fail 'https://raw.githubusercontent.com/Dietrich
