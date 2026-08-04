@@ -1,0 +1,18 @@
+# 빌드 산출물 / 의존성 — 어느 하위 프로젝트에서 나오든 커밋하지 않는다.
+# (하위 프로젝트가 각자 .gitignore 를 갖고 있어도, 그 폴더가 사라지면
+#  잔여물이 그대로 드러나므로 루트에서도 한 번 막아둔다)
+node_modules/
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# 로컬 환경
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# 에디터
+.idea/
+*.swp
