@@ -3,7 +3,8 @@
 이 앱은 **자기 저장소로 옮겼습니다.**
 
 👉 **https://github.com/frakenfire/todaynote**
-(아직 이름을 안 바꿨다면 https://github.com/frakenfire/- — GitHub 가 자동 전달합니다)
+(아직 이름을 안 바꿨다면 https://github.com/frakenfire/- 로 들어가면 됩니다 —
+ rename 후에는 GitHub 가 옛 주소를 자동 전달합니다)
 
 ```bash
 git clone https://github.com/frakenfire/todaynote.git
